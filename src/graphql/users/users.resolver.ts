@@ -1,27 +1,25 @@
 import { pubsub } from "../context";
+import sql from "../../db";
 
 const resolver = {
   UsersQuery: {
-    user() {
-
-
-
-      return {
-        first_name: "abc",
-        last_name: "abc",
-        email: "abc",
-        username: "abc",
-      }
+    async users() {
+      return sql`SELECT * FROM users`
     }
   }
 }
 
 const mutation = {
   UsersMutation: {
-    add_user(_, { first_name, last_name, email, username }) {
-      console.log(first_name, last_name, email, username);
-      void pubsub.publish("users/user_added", {user_added: {first_name, last_name, email, username}});
-      return { first_name, last_name, email, username }
+    async add_user(_, { first_name, last_name, email, username, password }) {
+      console.log(first_name, last_name, email, username, password);
+      const users = await sql`
+        INSERT INTO users(first_name, last_name, email, username, password)
+        VALUES (${first_name}, ${last_name}, ${email}, ${username}, ${password})
+        RETURNING user_id, first_name, last_name, email, username, register_timestamp`
+      const user_added = users[0];
+      void pubsub.publish("users/user_added", {user_added});
+      return user_added
     }
   }
 }

@@ -13,23 +13,15 @@ import * as process from "process";
 import sql from "./db"
 
 const PORT = parseInt(process?.env?.PORT || '4000', 10);
-// console.log(sql.options)
 
-sql`SET search_path TO 'core';`
-
-async function test() {
-  return sql`
-    select *
-    from users
-  `;
-}
 
 (async () => {
+  await sql`SET search_path TO ${sql.unsafe(process.env.DB_SCHEMA)};`
+
   // Bootstrap schema and resolvers
   const typeDefs = await BootstrapSchema(path.join(__dirname, './graphql'));
   const resolvers = await BootstrapResolvers(path.join(__dirname, './graphql'));
 
-  console.log((await test()))
   // Create the schema
   const schema = makeExecutableSchema({ typeDefs, resolvers });
 

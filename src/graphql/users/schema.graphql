@@ -1,19 +1,23 @@
 type UsersQuery {
-    user: User!
+    users: [User!]!
 }
 
 type UsersMutation {
-    add_user(first_name: String!,
+    add_user(
+        first_name: String!,
         last_name: String!,
         email: String!,
         username: String!,
-    ):
-    User!
+        password: String!,
+    ): User!
 }
 
 type User {
+    user_id: Int,
     first_name: String!,
     last_name: String!,
     email: String!,
     username: String!,
+    register_timestamp: String!,
+    last_login_timestamp: String!,
 }
