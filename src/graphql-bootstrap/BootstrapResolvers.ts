@@ -1,5 +1,6 @@
-import * as fs from 'fs/promises';
-import * as path from 'path';
+import fs from 'fs/promises';
+import path from 'path';
+import os from "os";
 import { mergeResolvers } from '@graphql-tools/merge';
 
 export const BootstrapResolvers = async (absoluteRootDir: string) => {
@@ -15,7 +16,9 @@ export const BootstrapResolvers = async (absoluteRootDir: string) => {
   );
 
   for (const resolver of resolvers) {
-    const content = await import(path.join(resolver.path, resolver.name));
+    const modulePath = path.join(
+      os.platform() === "win32" ? "file://" : "", resolver.path, resolver.name);
+    const content = await import(modulePath);
 
     if (!content) {
       continue;
