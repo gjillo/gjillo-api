@@ -1,0 +1,14 @@
+type Query {
+    cards: CardsQuery!
+    users: UsersQuery!
+}
+
+type Mutation {
+    cards: CardsMutation!
+    users: UsersMutation!
+}
+
+type Subscription {
+    card_added: Card!
+    user_added: User!
+}

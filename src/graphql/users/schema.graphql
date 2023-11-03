@@ -1,0 +1,19 @@
+type UsersQuery {
+    user: User!
+}
+
+type UsersMutation {
+    add_user(first_name: String!,
+        last_name: String!,
+        email: String!,
+        username: String!,
+    ):
+    User!
+}
+
+type User {
+    first_name: String!,
+    last_name: String!,
+    email: String!,
+    username: String!,
+}
