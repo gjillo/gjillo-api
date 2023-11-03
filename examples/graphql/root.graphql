@@ -1,0 +1,11 @@
+type Query {
+    cards: CardsQuery!
+}
+
+type Mutation {
+    cards: CardsMutation!
+}
+
+type Subscription {
+    card_added: Card!
+}

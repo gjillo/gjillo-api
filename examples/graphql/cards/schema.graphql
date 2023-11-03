@@ -1,0 +1,11 @@
+type CardsQuery {
+    card: Card!
+}
+
+type CardsMutation {
+    add_card(name: String!): Card!
+}
+
+type Card {
+    name: String!
+}
