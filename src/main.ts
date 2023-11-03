@@ -1,5 +1,6 @@
 import path from 'path';
 import express from 'express';
+import cors from 'cors';
 import {WebSocketServer} from 'ws';
 import {makeExecutableSchema} from '@graphql-tools/schema';
 import {createServer} from 'http';
@@ -49,7 +50,7 @@ const PORT = parseInt(process?.env?.PORT || '4000', 10);
   // Start Apollo before starting the main server
   await apolloServer.start();
 
-  app.use('/graphql', express.json(), expressMiddleware(apolloServer));
+  app.use('/graphql', cors(), express.json(), expressMiddleware(apolloServer));
 
   // Start the main server
   await new Promise<void>((resolve) => httpServer.listen(PORT, resolve));
