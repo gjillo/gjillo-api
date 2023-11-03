@@ -14,6 +14,9 @@ import sql from "./db"
 
 const PORT = parseInt(process?.env?.PORT || '4000', 10);
 // console.log(sql.options)
+
+sql`SET search_path TO 'core';`
+
 async function test() {
   return sql`
     select *
@@ -25,9 +28,8 @@ async function test() {
   // Bootstrap schema and resolvers
   const typeDefs = await BootstrapSchema(path.join(__dirname, './graphql'));
   const resolvers = await BootstrapResolvers(path.join(__dirname, './graphql'));
-  console.log(process.env.DB_HOST)
 
-  console.log(test())
+  console.log((await test()))
   // Create the schema
   const schema = makeExecutableSchema({ typeDefs, resolvers });
 
