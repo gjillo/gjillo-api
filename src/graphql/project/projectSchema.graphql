@@ -1,4 +1,16 @@
-type Project {
+interface IProjectBase {
+    id: Int!
+    name: String!
+    created: Timestamp!
+}
+
+type ProjectBase implements IProjectBase {
+    id: Int!
+    name: String!
+    created: Timestamp!
+}
+
+type Project implements IProjectBase {
     id: Int!
     name: String!
     created: Timestamp!
