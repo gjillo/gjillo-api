@@ -1,0 +1,14 @@
+type Column {
+    id: Int!
+    name: String
+    order: Int!
+    type: ColumnType
+    description: String!
+    cards: [Card!]!
+}
+
+enum ColumnType {
+    in_progress,
+    todo
+    done
+}

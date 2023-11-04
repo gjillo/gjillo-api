@@ -1,0 +1,6 @@
+type Project {
+    id: Int!
+    name: String!
+    created: Timestamp!
+    columns: [Column!]!
+}

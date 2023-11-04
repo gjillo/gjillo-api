@@ -1,0 +1,8 @@
+type Card {
+    id: Int!
+    name: String
+    description: String
+    story_points: Int
+    created: Timestamp!
+    order: Int!
+}

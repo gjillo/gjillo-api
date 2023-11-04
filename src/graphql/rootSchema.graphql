@@ -1,0 +1,7 @@
+type Query {
+    project(projectId: Int!): Project
+}
+
+type Mutation {
+    projects: ProjectsMutation!
+}
