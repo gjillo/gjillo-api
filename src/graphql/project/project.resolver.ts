@@ -16,9 +16,9 @@ const resolver = {
       const result = SQL`
         SELECT column_id as id, name, project_id, "order", type, description
         FROM core.columns
-        WHERE project_id = ${parent.id}`;
+        WHERE project_id = ${parent.id}
+        ORDER BY "order"`;
 
-      console.log(result);
       return result;
     }
   }
