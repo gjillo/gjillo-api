@@ -1,4 +1,4 @@
-import { SQL } from "@database/Connection";
+import { SQL } from "../../database/Connection";
 
 const mutation = {
   ProjectsMutation: {
