@@ -9,8 +9,11 @@ import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHt
 import { expressMiddleware } from '@apollo/server/express4';
 import { BootstrapSchema, BootstrapResolvers  } from './graphql-bootstrap';
 import { ServerCleanupPlugin, LogResolvedFieldsPlugin } from "./apollo-plugins";
+import { reportMissingEnvVars } from "./utilities/reportMissingEnvVars";
 
-const PORT = parseInt(process?.env?.PORT || '4000', 10);
+reportMissingEnvVars();
+
+const PORT = parseInt(process.env?.PORT || '4000', 10);
 
 (async () => {
   // Bootstrap schema and resolvers
