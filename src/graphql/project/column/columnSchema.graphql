@@ -4,6 +4,7 @@ type Column {
     order: Int!
     type: ColumnType
     description: String!
+    cards: [Card!]!
 }
 
 enum ColumnType {
