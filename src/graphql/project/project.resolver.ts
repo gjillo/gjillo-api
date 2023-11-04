@@ -11,6 +11,17 @@ const resolver = {
       return result[0];
     },
   },
+  Project: {
+    columns(parent) {
+      const result = SQL`
+        SELECT column_id as id, name, project_id, "order", type, description
+        FROM core.columns
+        WHERE project_id = ${parent.id}`;
+
+      console.log(result);
+      return result;
+    }
+  }
 };
 
 export { resolver };

@@ -1,0 +1,13 @@
+type Column {
+    id: Int!
+    name: String
+    order: Int!
+    type: ColumnType
+    description: String!
+}
+
+enum ColumnType {
+    in_progress,
+    todo
+    done
+}
