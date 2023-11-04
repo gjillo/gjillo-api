@@ -1,4 +1,4 @@
-import { SQL } from "../../database/Connection";
+import { SQL } from '../../database/Connection';
 
 const resolver = {
   Query: {
@@ -13,15 +13,13 @@ const resolver = {
   },
   Project: {
     columns(parent) {
-      const result = SQL`
+      return SQL`
         SELECT column_id as id, name, project_id, "order", type, description
         FROM core.columns
         WHERE project_id = ${parent.id}
         ORDER BY "order"`;
-
-      return result;
-    }
-  }
+    },
+  },
 };
 
 export { resolver };
