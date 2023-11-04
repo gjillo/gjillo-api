@@ -1,5 +1,6 @@
 import path from 'path';
 import express from 'express';
+import cors from 'cors';
 import { WebSocketServer } from 'ws';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { createServer } from 'http';
@@ -10,6 +11,7 @@ import { expressMiddleware } from '@apollo/server/express4';
 import { BootstrapSchema, BootstrapResolvers  } from './graphql-bootstrap';
 import { ServerCleanupPlugin, LogResolvedFieldsPlugin } from "./apollo-plugins";
 import { reportMissingEnvVars } from "./utilities/reportMissingEnvVars";
+import process from "process";
 
 reportMissingEnvVars();
 
@@ -47,7 +49,16 @@ const PORT = parseInt(process.env?.PORT || '4000', 10);
   // Start Apollo before starting the main server
   await apolloServer.start();
 
-  app.use('/graphql', express.json(), expressMiddleware(apolloServer));
+  if(process.env.NODE_ENV !== 'production') {
+    console.warn("Enabling CORS from all origins");
+    app.use('/graphql', cors());
+  }
+
+  app.use(
+    '/graphql',
+    cors(),
+    express.json(),
+    expressMiddleware(apolloServer));
 
   // Start the main server
   await new Promise<void>((resolve) => httpServer.listen(PORT, resolve));
