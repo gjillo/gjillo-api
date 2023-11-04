@@ -1,5 +1,16 @@
 import { SQL } from "../../database/Connection";
 
+const resolver = {
+  Query: {
+    async projects() {
+      return SQL`
+        SELECT project_id as id, name, creation_timestamp as created
+        FROM core.projects
+        ORDER BY project_id`;
+    }
+  }
+}
+
 const mutation = {
   ProjectsMutation: {
     async create(_, { name }) {
@@ -23,4 +34,4 @@ const mutation = {
   },
 };
 
-export { mutation };
+export { resolver, mutation };

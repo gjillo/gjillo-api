@@ -1,4 +1,6 @@
 type Query {
+    projects: [ProjectBase!]!
+
     project(projectId: Int!): Project
 }
 
