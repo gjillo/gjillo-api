@@ -1,5 +1,5 @@
 type Card {
-    id: Int!
+    uuid: UUID!
     name: String
     description: String
     story_points: Int

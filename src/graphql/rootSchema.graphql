@@ -1,7 +1,7 @@
 type Query {
     projects: [ProjectBase!]!
 
-    project(projectId: Int!): Project
+    project(projectUuid: UUID!): Project
 }
 
 type Mutation {

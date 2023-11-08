@@ -4,9 +4,9 @@ const resolver = {
   Column: {
     cards(parent) {
       return SQL`
-        SELECT card_id as id, name, description, story_points, creation_timestamp as created, "order"
+        SELECT card_uuid as uuid, name, description, story_points, creation_timestamp as created, "order"
         FROM core.cards
-        WHERE column_id = ${parent.id}
+        WHERE column_uuid = ${parent.uuid}
         ORDER BY "order"`;
     },
   },

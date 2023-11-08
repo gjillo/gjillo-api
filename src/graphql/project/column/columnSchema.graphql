@@ -1,5 +1,5 @@
 type Column {
-    id: Int!
+    uuid: UUID!
     name: String
     order: Int!
     type: ColumnType

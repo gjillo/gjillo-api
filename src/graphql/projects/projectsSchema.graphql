@@ -1,4 +1,4 @@
 type ProjectsMutation {
     create(name: String!): Project!
-    update(id: Int!, name: String): Project!
+    update(uuid: UUID!, name: String): Project!
 }
