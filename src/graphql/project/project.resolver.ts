@@ -2,11 +2,11 @@ import { SQL } from '../../database/Connection';
 
 const resolver = {
   Query: {
-    async project(_, { projectId }) {
+    async project(_, { projectUuid }) {
       const result = await SQL`
-          SELECT project_id as id, name, creation_timestamp as created
+          SELECT project_uuid as uuid, name, creation_timestamp as created
           FROM core.projects
-          WHERE project_id = ${projectId}`;
+          WHERE project_uuid = ${projectUuid}`;
 
       return result[0];
     },
@@ -14,9 +14,9 @@ const resolver = {
   Project: {
     columns(parent) {
       return SQL`
-        SELECT column_id as id, name, project_id, "order", type, description
+        SELECT column_uuid as uuid, name, project_uuid, "order", type, description
         FROM core.columns
-        WHERE project_id = ${parent.id}
+        WHERE project_uuid = ${parent.uuid}
         ORDER BY "order"`;
     },
   },
