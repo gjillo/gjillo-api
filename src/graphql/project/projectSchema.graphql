@@ -1,18 +1,18 @@
 interface IProjectBase {
     uuid: UUID!
     name: String!
-    created: Timestamp!
+    created: DateTime!
 }
 
 type ProjectBase implements IProjectBase {
     uuid: UUID!
     name: String!
-    created: Timestamp!
+    created: DateTime!
 }
 
 type Project implements IProjectBase {
     uuid: UUID!
     name: String!
-    created: Timestamp!
+    created: DateTime!
     columns: [Column!]!
 }

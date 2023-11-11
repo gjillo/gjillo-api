@@ -12,6 +12,18 @@ import { BootstrapSchema, BootstrapResolvers  } from './graphql-bootstrap';
 import { ServerCleanupPlugin, LogResolvedFieldsPlugin } from "./apollo-plugins";
 import { reportMissingEnvVars } from "./utilities/reportMissingEnvVars";
 import process from "process";
+import {
+  DateTimeResolver,
+  DateTimeTypeDefinition,
+  EmailAddressResolver,
+  EmailAddressTypeDefinition,
+  HexColorCodeDefinition,
+  HexColorCodeResolver,
+  URLResolver,
+  URLTypeDefinition,
+  UUIDDefinition,
+  UUIDResolver
+} from "graphql-scalars";
 
 reportMissingEnvVars();
 
@@ -19,11 +31,11 @@ const PORT = parseInt(process.env?.PORT || '4000', 10);
 
 (async () => {
   // Bootstrap schema and resolvers
-  const typeDefs = await BootstrapSchema(path.join(__dirname, './graphql'));
-  const resolvers = await BootstrapResolvers(path.join(__dirname, './graphql'));
+  const localTypeDefs = await BootstrapSchema(path.join(__dirname, './graphql'));
+  const localResolvers = await BootstrapResolvers(path.join(__dirname, './graphql'));
 
   // Create the schema
-  const schema = makeExecutableSchema({ typeDefs, resolvers });
+  const schema = makeExecutableSchema({ typeDefs: localTypeDefs, resolvers: localResolvers });
 
   // Create all the necessary servers
   const app = express();
@@ -37,8 +49,23 @@ const PORT = parseInt(process.env?.PORT || '4000', 10);
   const serverCleanup = useServer({ schema }, wsServer);
 
   const apolloServer = new ApolloServer({
-    resolvers,
-    typeDefs,
+    typeDefs: [
+      localTypeDefs,
+      DateTimeTypeDefinition,
+      EmailAddressTypeDefinition,
+      HexColorCodeDefinition,
+      URLTypeDefinition,
+      UUIDDefinition
+    ],
+    resolvers: [
+      localResolvers,
+      { DateTime: DateTimeResolver },
+      { EmailAddress: EmailAddressResolver },
+      { HexColorCode: HexColorCodeResolver },
+      { URL: URLResolver },
+      { UUID: UUIDResolver },
+
+    ],
     plugins: [
       ApolloServerPluginDrainHttpServer({ httpServer }),
       ServerCleanupPlugin(serverCleanup),

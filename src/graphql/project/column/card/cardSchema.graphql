@@ -3,9 +3,9 @@ type Card {
     name: String
     description: String
     story_points: Int
-    created: Timestamp!
+    created: DateTime!
     order: Int!
     assignee: Assignee
-    deadline: Timestamp
+    deadline: DateTime
     tags: [Tag!]!
 }

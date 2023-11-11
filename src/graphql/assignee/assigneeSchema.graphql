@@ -1,6 +1,6 @@
 type Assignee {
     uuid: UUID
     name: String
-    email: String,
+    email: EmailAddress,
     image: URL
 }

@@ -1,4 +1,4 @@
 type Tag {
     value: String!
-    color: String
+    color: HexColorCode
 }
