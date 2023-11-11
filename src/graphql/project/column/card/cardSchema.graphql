@@ -5,4 +5,7 @@ type Card {
     story_points: Int
     created: Timestamp!
     order: Int!
+    assignee: Assignee
+    deadline: Timestamp
+    tags: [Tag!]!
 }

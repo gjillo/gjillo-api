@@ -1,2 +1,3 @@
 scalar Timestamp
 scalar UUID
+scalar URL
