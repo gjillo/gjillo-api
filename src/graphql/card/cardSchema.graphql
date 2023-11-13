@@ -1,0 +1,23 @@
+interface ICard {
+    uuid: UUID!
+    name: String
+    description: String
+    story_points: Int
+    created: DateTime!
+    order: Int!
+    assignee: Assignee
+    deadline: DateTime
+    tags: [Tag!]!
+}
+
+type Card implements ICard{
+    uuid: UUID!
+    name: String
+    description: String
+    story_points: Int
+    created: DateTime!
+    order: Int!
+    assignee: Assignee
+    deadline: DateTime
+    tags: [Tag!]!
+}

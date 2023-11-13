@@ -1,7 +1,17 @@
-import { SQL } from '../../../../database/Connection';
+import { SQL } from '../../database/Connection';
 
 const resolver = {
-  Card: {
+  Query: {
+    async card_details(parent, { cardUuid }) {
+      const result = await SQL`
+      SELECT card_uuid as uuid, name, description, story_points, creation_timestamp as created, "order"
+      FROM core.cards
+      WHERE card_uuid = ${cardUuid}`;
+
+      return result[0];
+    },
+  },
+  CardDetails: {
     async assignee(parent) {
       const result = await SQL`
           SELECT auth.users.id as uuid, auth.users.name as name, email, image
@@ -32,6 +42,16 @@ const resolver = {
               JOIN core.fields ON core.fields.field_uuid = select_values.field_uuid
           WHERE card_uuid = ${parent.uuid}
             AND role = 'tags'`;
+    },
+    async fields(parent) {
+      const result = await SQL`
+      SELECT field_uuid, field_type, date_value, checkbox_value, number_value, select_value, text_value
+      FROM core.get_card_fields_values(${parent.uuid})`;
+
+      return result.map(v => ({
+        ...v,
+        data: v,
+      }));
     },
   },
 };

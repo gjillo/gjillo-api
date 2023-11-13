@@ -11,7 +11,7 @@ const resolver = {
       return result[0];
     },
   },
-  Project: {
+  ProjectDetails: {
     columns(parent) {
       return SQL`
         SELECT column_uuid as uuid, name, project_uuid, "order", type, description

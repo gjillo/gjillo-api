@@ -1,4 +1,16 @@
+interface IProject {
+    uuid: UUID!
+    name: String!
+    created: DateTime!
+}
+
+type Project implements IProject {
+    uuid: UUID!
+    name: String!
+    created: DateTime!
+}
+
 type ProjectsMutation {
-    create(name: String!): Project!
-    update(uuid: UUID!, name: String): Project!
+    create(name: String!): ProjectDetails!
+    update(uuid: UUID!, name: String): ProjectDetails!
 }

@@ -1,4 +1,4 @@
-type Card {
+type CardDetails implements ICard {
     uuid: UUID!
     name: String
     description: String
@@ -8,4 +8,5 @@ type Card {
     assignee: Assignee
     deadline: DateTime
     tags: [Tag!]!
+    fields: [CardField!]!
 }
