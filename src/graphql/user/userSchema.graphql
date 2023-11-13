@@ -1,4 +1,4 @@
-type Assignee {
+type User {
     uuid: UUID
     name: String
     email: EmailAddress,

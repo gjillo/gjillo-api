@@ -5,7 +5,7 @@ interface ICard {
     story_points: Int
     created: DateTime!
     order: Int!
-    assignee: Assignee
+    assignee: User
     deadline: DateTime
     tags: [Tag!]!
 }
@@ -17,7 +17,7 @@ type Card implements ICard{
     story_points: Int
     created: DateTime!
     order: Int!
-    assignee: Assignee
+    assignee: User
     deadline: DateTime
     tags: [Tag!]!
 }
