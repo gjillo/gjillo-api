@@ -1,0 +1,6 @@
+type User {
+    uuid: UUID
+    name: String
+    email: EmailAddress,
+    image: URL
+}

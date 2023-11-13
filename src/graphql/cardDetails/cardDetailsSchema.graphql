@@ -1,0 +1,12 @@
+type CardDetails implements ICard {
+    uuid: UUID!
+    name: String
+    description: String
+    story_points: Int
+    created: DateTime!
+    order: Int!
+    assignee: User
+    deadline: DateTime
+    tags: [Tag!]!
+    fields: [CardField!]!
+}

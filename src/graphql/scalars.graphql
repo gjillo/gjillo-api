@@ -1,2 +1,5 @@
-scalar Timestamp
+scalar DateTime
+scalar EmailAddress
+scalar URL
 scalar UUID
+scalar HexColorCode

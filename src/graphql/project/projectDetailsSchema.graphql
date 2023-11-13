@@ -1,0 +1,6 @@
+type ProjectDetails implements IProject {
+    uuid: UUID!
+    name: String!
+    created: DateTime!
+    columns: [Column!]!
+}

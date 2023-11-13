@@ -2,7 +2,7 @@ import { SQL } from "../../database/Connection";
 
 const resolver = {
   Query: {
-    async projects() {
+    projects() {
       return SQL`
         SELECT project_uuid as uuid, name, creation_timestamp as created
         FROM core.projects

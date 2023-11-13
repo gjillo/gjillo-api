@@ -1,0 +1,21 @@
+union FieldValue = FieldTextValue | FieldSelectValue | FieldNumberValue | FieldDateValue | FieldCheckboxValue
+
+type FieldTextValue {
+    text_value: String
+}
+
+type FieldNumberValue {
+    number_value: Float!
+}
+
+type FieldCheckboxValue {
+    checkbox_value: Boolean!
+}
+
+type FieldDateValue {
+    date_value: DateTime!
+}
+
+type FieldSelectValue {
+    select_value: String!
+}

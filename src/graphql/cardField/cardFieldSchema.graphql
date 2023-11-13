@@ -1,0 +1,14 @@
+type CardField {
+    field_uuid: UUID!
+    field_type: CardFieldType!
+    data: FieldValue!
+}
+
+enum CardFieldType {
+    text
+    number
+    date
+    checkbox
+    dropdown_single
+    dropdown_multiple
+}

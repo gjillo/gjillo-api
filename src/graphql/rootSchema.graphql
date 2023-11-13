@@ -1,7 +1,9 @@
 type Query {
-    projects: [ProjectBase!]!
+    projects: [Project!]!
 
-    project(projectUuid: UUID!): Project
+    project(projectUuid: UUID!): ProjectDetails
+
+    card_details(cardUuid: UUID!): CardDetails
 }
 
 type Mutation {

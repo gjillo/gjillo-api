@@ -1,8 +1,0 @@
-type Card {
-    uuid: UUID!
-    name: String
-    description: String
-    story_points: Int
-    created: Timestamp!
-    order: Int!
-}
