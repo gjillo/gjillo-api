@@ -87,6 +87,8 @@ const PORT = parseInt(process.env?.PORT || '4000', 10);
     express.json(),
     expressMiddleware(apolloServer));
 
+  app.use(express.static('public'))
+
   // Start the main server
   await new Promise<void>((resolve) => httpServer.listen(PORT, resolve));
   console.log("GraphQL server is running");
