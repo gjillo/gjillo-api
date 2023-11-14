@@ -1,11 +1,15 @@
 type Query {
+    "Basic projects information"
     projects: [Project!]!
 
+    "Detailed project information"
     project(projectUuid: UUID!): ProjectDetails
 
+    "Detailed card information"
     card_details(cardUuid: UUID!): CardDetails
 }
 
 type Mutation {
+    "Mutations related to projects"
     projects: ProjectsMutation!
 }

@@ -1,6 +1,14 @@
+"Represents a project with information about contained columns"
 type ProjectDetails implements IProject {
+    "Project UUID"
     uuid: UUID!
+
+    "Display name"
     name: String!
+
+    "Creation time"
     created: DateTime!
+
+    "Contained columns"
     columns: [Column!]!
 }

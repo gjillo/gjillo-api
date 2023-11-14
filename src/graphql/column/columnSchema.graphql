@@ -1,14 +1,32 @@
+"Represents column"
 type Column {
+    "UUID"
     uuid: UUID!
+
+    "Display name"
     name: String
+
+    "Order in which to display the column"
     order: Int!
+
+    "Column type"
     type: ColumnType
+
+    "Description as plain text"
     description: String!
+
+    "Contained cards"
     cards: [Card!]!
 }
 
+"Type of the column, used for burnout chart calculations"
 enum ColumnType {
-    in_progress,
+    "Cards in this column are considered as not being worked on"
     todo
+
+    "Cards in this column are considered as being worked on"
+    in_progress
+
+    "Cards in this column are considered as finished"
     done
 }

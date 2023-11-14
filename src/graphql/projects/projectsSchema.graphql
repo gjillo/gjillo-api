@@ -1,16 +1,41 @@
+"Represents basic interface for a card"
 interface IProject {
+    "Project UUID"
     uuid: UUID!
+
+    "Display name"
     name: String!
+
+    "Creation time"
     created: DateTime!
 }
 
+"Basic project"
 type Project implements IProject {
+    "Project UUID"
     uuid: UUID!
+
+    "Display name"
     name: String!
+
+    "Creation time"
     created: DateTime!
 }
 
+"Project-specific projects"
 type ProjectsMutation {
-    create(name: String!): ProjectDetails!
-    update(uuid: UUID!, name: String): ProjectDetails!
+    "Create a new project"
+    create(
+        "Project display name"
+        name: String!
+    ): ProjectDetails!
+
+    "Update project information"
+    update(
+        "Project UUID"
+        uuid: UUID!
+
+        "New project name"
+        name: String
+    ): ProjectDetails!
 }

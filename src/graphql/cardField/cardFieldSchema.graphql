@@ -1,14 +1,32 @@
+"Represents card field with value"
 type CardField {
+    "Field uuid"
     field_uuid: UUID!
+
+    "Field type"
     field_type: CardFieldType!
+
+    "Field value"
     data: FieldValue!
 }
 
+"Possible card field types"
 enum CardFieldType {
+    "Text field"
     text
+
+    "Number field"
     number
+
+    "Date field"
     date
+
+    "Boolean field"
     checkbox
+
+    "Dropdown with one selection"
     dropdown_single
+
+    "Dropdown with multiple selections"
     dropdown_multiple
 }
