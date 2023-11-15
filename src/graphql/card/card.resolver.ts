@@ -5,7 +5,7 @@ const resolver = {
   Card: {
     assignees(parent) {
       return SQL`
-          SELECT auth.users.id as uuid, auth.users.name as name, email, image
+          SELECT card_uuid as uuid, auth.users.name as name, email, image, creation_timestamp as created
           FROM core.cards
               JOIN core.card_users USING (card_uuid)
               JOIN auth.users ON core.card_users.user_uuid = auth.users.id
@@ -32,6 +32,18 @@ const resolver = {
               JOIN core.fields ON core.fields.field_uuid = select_values.field_uuid
           WHERE card_uuid = ${parent.uuid}
             AND role = 'tags'`;
+    },
+    // TODO this shouldn't be copy pasted from cardDetails.resolver.ts
+    async milestone(parent) {
+      const result = await SQL`
+          SELECT milestone_uuid as uuid, milestones.name, milestones.creation_timestamp, deadline
+          FROM core.milestones
+              JOIN core.cards USING (milestone_uuid)
+          WHERE card_uuid = ${parent.uuid}`;
+      console.log(parent.uuid)
+      console.log(result)
+
+      return result[0]
     },
   },
 };

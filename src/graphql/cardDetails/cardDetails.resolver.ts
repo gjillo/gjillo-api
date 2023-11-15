@@ -51,8 +51,8 @@ const resolver = {
         data: v,
       }));
     },
-    milestone(parent) {
-      const result = SQL`
+    async milestone(parent) {
+      const result = await SQL`
           SELECT milestone_uuid as uuid, milestones.name, milestones.creation_timestamp, deadline
           FROM core.milestones
               JOIN core.cards USING (milestone_uuid)

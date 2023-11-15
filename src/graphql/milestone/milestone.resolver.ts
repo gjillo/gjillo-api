@@ -1,24 +1,16 @@
 import { SQL } from '../../database/Connection';
 
-// const resolver = {
-//     Query: {
-//         async milestone(_, { milestoneUuid }) {
-//             const result = await SQL`
-//                 SELECT milestone_uuid as uuid, name, creation_timestamp, deadline FROM core.milestones
-//                 WHERE milestone_uuid=${milestoneUuid}`;
-//
-//             return result[0];
-//         },
-//
-//         async milestones(_, { projectUuid }) {
-//             const result = await SQL`
-//                 SELECT milestone_uuid as uuid, name, creation_timestamp, deadline FROM core.milestones
-//                 WHERE project_uuid=${projectUuid}`;
-//
-//             return result[0];
-//         },
-//     },
-// };
+const resolver = {
+    Milestone: {
+        async cards(parent, _) {
+            const result = await SQL`
+                SELECT card_uuid as uuid, name, description, story_points, creation_timestamp as created, "order"
+                FROM core.cards
+                WHERE milestone_uuid = ${parent.uuid}`;
+            return result;
+        },
+    },
+};
 
 const mutation = {
     MilestoneMutation: {
@@ -70,4 +62,4 @@ const mutation = {
     },
 };
 
-export { mutation };
+export { resolver, mutation };
