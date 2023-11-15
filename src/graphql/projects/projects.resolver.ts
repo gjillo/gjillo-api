@@ -37,18 +37,20 @@ const mutation = {
       return result[0];
     },
 
-    async add_user(_, { uuid }) {
+    // TODO
+    async add_user(_, { project_uuid, user_uuid }) {
       // const result = await SQL``;
       //
-      void pubsub.publish("projects/updated", {uuid});
+      void pubsub.publish("projects/updated", { project_uuid, user_uuid });
 
       // return result[0];
     },
 
-    async remove_user(_, { uuid }) {
+    // TODO
+    async remove_user(_, { project_uuid, user_uuid }) {
       // const result = await SQL``;
       //
-      void pubsub.publish("projects/updated", {uuid});
+      void pubsub.publish("projects/updated", { project_uuid, user_uuid });
 
       // return result[0];
     },

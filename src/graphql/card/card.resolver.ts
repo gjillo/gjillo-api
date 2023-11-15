@@ -35,51 +35,34 @@ const resolver = {
   },
 };
 
+
+// TODO
+// update_select_field select could require separate function
+const update_field = async (_, { card_uuid, field_uuid, value }) => {
+  void pubsub.publish("card/updated", {});
+}
+
 const mutation = {
   CardsMutation: {
-    // TODO change mutation parameters
-    async create(_, { uuid, name, email, image }) {
-      void pubsub.publish("card/created", {});
+    // TODO
+    async create(_, { name, description, story_points, assignee_uuids, deadline, tag_uuids }) {
+      void pubsub.publish("card/created", { name, description, story_points, assignee_uuids, deadline, tag_uuids });
       // const result = await SQL``;
       //
       // return result[0];
     },
-    async update_details(_, { uuid, name, email, image }) {
-      void pubsub.publish("card/updated", {});
+    // TODO
+    async update_details(_, { uuid, name, description, story_points, order, asignee_uuids, deadline, tag_uuids }) {
+      void pubsub.publish("card/updated", { uuid, name, description, story_points, order, asignee_uuids, deadline, tag_uuids });
       // const result = await SQL``;
       //
       // return result[0];
     },
-    async update_text_field(_, { uuid, name, email, image }) {
-      void pubsub.publish("card/updated", {});
-      // const result = await SQL``;
-      //
-      // return result[0];
-    },
-    async update_number_field(_, { uuid, name, email, image }) {
-      void pubsub.publish("card/updated", {});
-      // const result = await SQL``;
-      //
-      // return result[0];
-    },
-    async update_checkbox_field(_, { uuid, name, email, image }) {
-      void pubsub.publish("card/updated", {});
-      // const result = await SQL``;
-      //
-      // return result[0];
-    },
-    async update_date_field(_, { uuid, name, email, image }) {
-      void pubsub.publish("card/updated", {uuid});
-      // const result = await SQL``;
-      //
-      // return result[0];
-    },
-    async update_select_field(_, { uuid, name, email, image }) {
-      void pubsub.publish("card/updated", {uuid});
-      // const result = await SQL``;
-      //
-      // return result[0];
-    },
+    update_text_field: async (parent, input) => update_field(parent, input),
+    update_number_field: async (parent, input) => update_field(parent, input),
+    update_checkbox_field: async (parent, input) => update_field(parent, input),
+    update_date_field: async (parent, input) => update_field(parent, input),
+    update_select_field: async (parent, input) => update_field(parent, input),
   },
 };
 

@@ -81,7 +81,7 @@ type CardsMutation {
         deadline: DateTime
 
         "Assigned tag UUIDs"
-        tags: [UUID!]
+        tag_uuids: [UUID!]
     ): Card!
 
     "Update card details"

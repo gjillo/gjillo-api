@@ -15,20 +15,24 @@ const resolver = {
 
 const mutation = {
   ColumnMutation: {
-    async create(_, { name }) {
-      void pubsub.publish("column/created", {name});
+    // TODO
+    async create(_, { name, type, description }) {
+      void pubsub.publish("column/created", {name, type, description});
     },
 
-    async update(_, { uuid, name }) {
-      void pubsub.publish("column/updated", {uuid, name});
+    // TODO
+    async update(_, { uuid, name, order, type, description }) {
+      void pubsub.publish("column/updated", {uuid, name, order, type, description});
     },
 
-    async add_card(_, { uuid }) {
-      void pubsub.publish("column/updated", {uuid, name});
+    // TODO
+    async add_card(_, { column_uuid, card_uuid }) {
+      void pubsub.publish("column/updated", {column_uuid, card_uuid});
     },
 
-    async remove_card(_, { uuid }) {
-      void pubsub.publish("column/updated", {uuid, name});
+    // TODO
+    async remove_card(_, { column_uuid, card_uuid }) {
+      void pubsub.publish("column/updated", {column_uuid, card_uuid});
     },
   },
 };
