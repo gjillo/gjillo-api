@@ -33,7 +33,7 @@ const resolver = {
     },
     tags(parent) {
       return SQL`
-          SELECT value, color
+          SELECT select_option_uuid as uuid, value, color
           FROM core.cards
               JOIN core.select_values USING (card_uuid)
               JOIN core.select_options USING (select_option_uuid)
@@ -50,6 +50,15 @@ const resolver = {
         ...v,
         data: v,
       }));
+    },
+    milestone(parent) {
+      const result = SQL`
+          SELECT milestone_uuid as uuid, milestones.name, milestones.creation_timestamp, deadline
+          FROM core.milestones
+              JOIN core.cards USING (milestone_uuid)
+          WHERE card_uuid = ${parent.uuid}`;
+
+      return result[0]
     },
   },
 };

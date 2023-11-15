@@ -7,6 +7,9 @@ const resolver = {
     users() {
       return {};
     },
+    milestones() {
+      return {};
+    },
   },
 };
 

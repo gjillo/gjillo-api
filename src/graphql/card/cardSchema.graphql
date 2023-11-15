@@ -26,6 +26,9 @@ interface ICard {
 
     "Assigned tags"
     tags: [Tag!]!
+
+    "Assigned milestone"
+    milestone: Milestone
 }
 
 "Basic card"
@@ -56,6 +59,9 @@ type Card implements ICard{
 
     "Assigned tags"
     tags: [Tag!]!
+
+    "Assigned milestone"
+    milestone: Milestone
 }
 
 "Card-specific mutations"
@@ -82,6 +88,9 @@ type CardsMutation {
 
         "Assigned tag UUIDs"
         tag_uuids: [UUID!]
+
+        "Assigned milestone UUID"
+        milestone_uuid: UUID
     ): Card!
 
     "Update card details"
@@ -109,6 +118,9 @@ type CardsMutation {
 
         "New tag UUIDs"
         tag_uuids: [UUID!]!
+
+        "New assigned milestone UUID"
+        milestone_uuid: UUID
     ): Card!
 
     "Update custom text field"

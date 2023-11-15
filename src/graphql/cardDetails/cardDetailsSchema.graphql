@@ -29,4 +29,7 @@ type CardDetails implements ICard {
 
     "Card fields"
     fields: [CardField!]!
+
+    "Assigned milestone"
+    milestone: Milestone
 }

@@ -12,6 +12,9 @@ type ProjectDetails implements IProject {
     "Contained columns"
     columns: [Column!]!
 
+    "Milestones"
+    milestones: [Milestone!]!
+
     "Assigned users"
     users: [User!]!
 }

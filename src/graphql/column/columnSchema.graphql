@@ -36,8 +36,8 @@ enum ColumnType {
 type ColumnMutation {
     "Create column"
     create(
-        "Column UUID"
-        uuid: UUID!
+        "Project UUID"
+        project_uuid: UUID!
 
         "Display name"
         name: String
@@ -64,18 +64,15 @@ type ColumnMutation {
         type: ColumnType
 
         "New description as plain text"
-        description: String!
+        description: String
     ): Column!
 
-    "Add card"
-    add_card(
-        "Card UUID"
-        uuid: UUID!
-    ): Column!
+    "Assign card"
+    assign_card(
+        "Column UUID"
+        column_uuid: UUID!
 
-    "Remove card"
-    remove_card(
         "Card UUID"
-        uuid: UUID!
+        card_uuid: UUID!
     ): Column!
 }

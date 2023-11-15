@@ -21,6 +21,9 @@ type Mutation {
 
     "Mutations related to cards"
     cards: CardsMutation!
+
+    "Mutations related to milestones"
+    milestones: MilestoneMutation!
 }
 
 type Subscription {
