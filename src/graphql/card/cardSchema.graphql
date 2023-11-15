@@ -57,3 +57,93 @@ type Card implements ICard{
     "Assigned tags"
     tags: [Tag!]!
 }
+
+"Card-specific mutations"
+type CardsMutation {
+    "Update card details"
+    update_details(
+        "Card UUID"
+        uuid: UUID!
+
+        "New display name"
+        name: String
+
+        "New card description as Markdown"
+        description: String
+
+        "New assigned story points value"
+        story_points: Int
+
+        "New order in column"
+        order: Int
+
+        "New asignee UUIDs"
+        asignee_uuids: [UUID!]!
+
+        "New deadline"
+        deadline: DateTime
+
+        "New tag UUIDs"
+        tag_uuids: [UUID!]!
+    ): Card!
+
+    "Update custom text field"
+    update_text_field(
+        "Card UUID"
+        card_uuid: UUID!
+
+        "Field UUID"
+        field_uuid: UUID!
+
+        "New value"
+        value: String!
+    ): Card!
+
+    "Update custom number field"
+    update_number_field(
+        "Card UUID"
+        card_uuid: UUID!
+
+        "Field UUID"
+        field_uuid: UUID!
+
+        "New value"
+        value: Float!
+    ): Card!
+
+    "Update custom checkbox field"
+    update_checkbox_field(
+        "Card UUID"
+        card_uuid: UUID!
+
+        "Field UUID"
+        field_uuid: UUID!
+
+        "New value"
+        value: Boolean!
+    ): Card!
+
+    "Update custom date field"
+    update_date_field(
+        "Card UUID"
+        card_uuid: UUID!
+
+        "Field UUID"
+        field_uuid: UUID!
+
+        "New value"
+        value: DateTime!
+    ): Card!
+
+    "Update custom select field"
+    update_select_field(
+        "Card UUID"
+        card_uuid: UUID!
+
+        "Field UUID"
+        field_uuid: UUID!
+
+        "New value UUID"
+        value_uuid: UUID!
+    ): Card!
+}

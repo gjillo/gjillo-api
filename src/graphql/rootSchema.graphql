@@ -18,4 +18,7 @@ type Mutation {
 
     "Mutations related to users"
     users: UsersMutation!
+
+    "Mutations related to cards"
+    cards: CardsMutation!
 }

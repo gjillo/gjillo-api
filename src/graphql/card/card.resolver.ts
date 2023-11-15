@@ -34,4 +34,39 @@ const resolver = {
   },
 };
 
-export { resolver };
+const mutation = {
+  CardsMutation: {
+    async update_details(_, { uuid, name, email, image }) {
+      // const result = await SQL``;
+      //
+      // return result[0];
+    },
+    async update_text_field(_, { uuid, name, email, image }) {
+      // const result = await SQL``;
+      //
+      // return result[0];
+    },
+    async update_number_field(_, { uuid, name, email, image }) {
+      // const result = await SQL``;
+      //
+      // return result[0];
+    },
+    async update_checkbox_field(_, { uuid, name, email, image }) {
+      // const result = await SQL``;
+      //
+      // return result[0];
+    },
+    async update_date_field(_, { uuid, name, email, image }) {
+      // const result = await SQL``;
+      //
+      // return result[0];
+    },
+    async update_select_field(_, { uuid, name, email, image }) {
+      // const result = await SQL``;
+      //
+      // return result[0];
+    },
+  },
+};
+
+export { resolver, mutation };
