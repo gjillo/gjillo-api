@@ -31,6 +31,18 @@ const mutation = {
 
       return result[0];
     },
+
+    async add_user(_, { uuid }) {
+      // const result = await SQL``;
+      //
+      // return result[0];
+    },
+
+    async remove_user(_, { uuid }) {
+      // const result = await SQL``;
+      //
+      // return result[0];
+    },
   },
 };
 

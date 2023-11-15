@@ -38,4 +38,16 @@ type ProjectsMutation {
         "New project name"
         name: String
     ): ProjectDetails!
+
+    "Add user to project"
+    add_user(
+        "User UUID"
+        uuid: UUID!
+    ): ProjectDetails!
+
+    "Remove user from project"
+    remove_user(
+        "User UUID"
+        uuid: UUID!
+    ): ProjectDetails!
 }
