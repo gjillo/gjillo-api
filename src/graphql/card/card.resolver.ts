@@ -39,19 +39,19 @@ const mutation = {
   CardsMutation: {
     // TODO change mutation parameters
     async update_details(_, { uuid, name, email, image }) {
-      void pubsub.publish("cards/details_updated", {});
+      void pubsub.publish("card/details_updated", {});
       // const result = await SQL``;
       //
       // return result[0];
     },
     async update_text_field(_, { uuid, name, email, image }) {
-      void pubsub.publish("cards/field_updated", {});
+      void pubsub.publish("card/field_updated", {});
       // const result = await SQL``;
       //
       // return result[0];
     },
     async update_number_field(_, { uuid, name, email, image }) {
-      void pubsub.publish("cards/field_updated", {});
+      void pubsub.publish("card/field_updated", {});
       // const result = await SQL``;
       //
       // return result[0];
@@ -69,7 +69,7 @@ const mutation = {
       // return result[0];
     },
     async update_select_field(_, { uuid, name, email, image }) {
-      void pubsub.publish("cards/field_updated", {uuid});
+      void pubsub.publish("card/field_updated", {uuid});
       // const result = await SQL``;
       //
       // return result[0];
@@ -79,10 +79,10 @@ const mutation = {
 
 const subscription = {
   card_details_updated: {
-    subscribe: () => pubsub.asyncIterator(['cards/details_updated'])
+    subscribe: () => pubsub.asyncIterator(['card/details_updated'])
   },
   card_field_updated: {
-    subscribe: () => pubsub.asyncIterator(['cards/field_updated'])
+    subscribe: () => pubsub.asyncIterator(['card/field_updated'])
   },
 }
 

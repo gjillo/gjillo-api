@@ -29,4 +29,16 @@ type Subscription {
 
     "Card field updated"
     card_field_updated: Card!
+
+    "Project created"
+    project_created: Project!
+
+    "Project updated"
+    project_updated: Project!
+
+    "User added to project"
+    project_user_added: Project!
+
+    "User removed from project"
+    project_user_removed: Project!
 }
