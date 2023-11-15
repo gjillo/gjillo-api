@@ -19,8 +19,10 @@ const mutation = {
 }
 
 const subscription = {
-  card_added: {
-    subscribe: () => pubsub.asyncIterator(['cards/card_added'])
+  CardsSubscription: {
+    card_added: {
+      subscribe: () => pubsub.asyncIterator(['cards/card_added'])
+    }
   }
 }
 

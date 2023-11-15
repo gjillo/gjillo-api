@@ -7,7 +7,8 @@ const resolver = {
     users() {
       return {};
     },
-  }
+  },
+  // Subscription: {}
 };
 
 export {resolver}

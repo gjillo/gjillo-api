@@ -1,4 +1,5 @@
 import { SQL } from '../../database/Connection';
+import { pubsub } from "../context";
 
 const resolver = {
   Card: {
@@ -37,31 +38,37 @@ const resolver = {
 const mutation = {
   CardsMutation: {
     async update_details(_, { uuid, name, email, image }) {
+      void pubsub.publish("cards/details_updated", {});
       // const result = await SQL``;
       //
       // return result[0];
     },
     async update_text_field(_, { uuid, name, email, image }) {
+      void pubsub.publish("cards/field_updated", {});
       // const result = await SQL``;
       //
       // return result[0];
     },
     async update_number_field(_, { uuid, name, email, image }) {
+      void pubsub.publish("cards/field_updated", {});
       // const result = await SQL``;
       //
       // return result[0];
     },
     async update_checkbox_field(_, { uuid, name, email, image }) {
+      void pubsub.publish("cards/field_updated", {});
       // const result = await SQL``;
       //
       // return result[0];
     },
     async update_date_field(_, { uuid, name, email, image }) {
+      void pubsub.publish("cards/field_updated", {uuid});
       // const result = await SQL``;
       //
       // return result[0];
     },
     async update_select_field(_, { uuid, name, email, image }) {
+      void pubsub.publish("cards/field_updated", {uuid});
       // const result = await SQL``;
       //
       // return result[0];
@@ -69,4 +76,15 @@ const mutation = {
   },
 };
 
-export { resolver, mutation };
+const subscription = {
+  CardsSubscription: {
+    details_updated: {
+      subscribe: () => pubsub.asyncIterator(['cards/details_updated'])
+    },
+    field_updated: {
+      subscribe: () => pubsub.asyncIterator(['cards/field_updated'])
+    },
+  }
+}
+
+export {resolver, mutation, subscription}
