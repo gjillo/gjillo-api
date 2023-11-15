@@ -5,6 +5,9 @@ type Query {
     "Detailed project information"
     project(projectUuid: UUID!): ProjectDetails
 
+    "User information"
+    user(userUuid: UUID!): User
+
     "Detailed card information"
     card_details(cardUuid: UUID!): CardDetails
 }
@@ -12,4 +15,7 @@ type Query {
 type Mutation {
     "Mutations related to projects"
     projects: ProjectsMutation!
+
+    "Mutations related to users"
+    users: UsersMutation!
 }

@@ -22,7 +22,7 @@ type Project implements IProject {
     created: DateTime!
 }
 
-"Project-specific projects"
+"Project-specific mutations"
 type ProjectsMutation {
     "Create a new project"
     create(

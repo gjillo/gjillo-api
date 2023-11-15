@@ -3,7 +3,10 @@ const resolver = {
   Mutation: {
     projects() {
       return {};
-    }
+    },
+    users() {
+      return {};
+    },
   }
 };
 
