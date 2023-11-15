@@ -24,6 +24,9 @@ type Mutation {
 }
 
 type Subscription {
-    "Subscriptions related to cards"
-    cards: CardsSubscription!
+    "Card details updated"
+    card_details_updated: Card!
+
+    "Card field updated"
+    card_field_updated: Card!
 }

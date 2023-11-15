@@ -8,7 +8,6 @@ const resolver = {
       return {};
     },
   },
-  // Subscription: {}
 };
 
 export {resolver}

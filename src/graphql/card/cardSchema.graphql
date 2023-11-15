@@ -147,8 +147,3 @@ type CardsMutation {
         value_uuid: UUID!
     ): Card!
 }
-
-type CardsSubscription {
-    details_updated: UUID
-    field_updated: UUID
-}

@@ -37,6 +37,7 @@ const resolver = {
 
 const mutation = {
   CardsMutation: {
+    // TODO change mutation parameters
     async update_details(_, { uuid, name, email, image }) {
       void pubsub.publish("cards/details_updated", {});
       // const result = await SQL``;
@@ -77,14 +78,12 @@ const mutation = {
 };
 
 const subscription = {
-  CardsSubscription: {
-    details_updated: {
-      subscribe: () => pubsub.asyncIterator(['cards/details_updated'])
-    },
-    field_updated: {
-      subscribe: () => pubsub.asyncIterator(['cards/field_updated'])
-    },
-  }
+  card_details_updated: {
+    subscribe: () => pubsub.asyncIterator(['cards/details_updated'])
+  },
+  card_field_updated: {
+    subscribe: () => pubsub.asyncIterator(['cards/field_updated'])
+  },
 }
 
 export {resolver, mutation, subscription}
