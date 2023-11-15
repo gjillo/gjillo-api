@@ -19,10 +19,9 @@ const resolver = {
         WHERE project_uuid = ${parent.uuid}
         ORDER BY "order"`;
     },
-    // TODO user permissions could be selected there, but User type doesn't have field for this
     users(parent) {
       return SQL`
-        SELECT id as uuid, users.name, email, image
+        SELECT id as uuid, users.name, email, image, permissions
         FROM auth.users
             JOIN core.project_users ON users.id = project_users.user_uuid
             JOIN core.projects USING (project_uuid)

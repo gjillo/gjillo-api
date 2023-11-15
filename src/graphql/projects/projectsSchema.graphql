@@ -1,4 +1,4 @@
-"Represents basic interface for a card"
+"Represents basic interface for a project"
 interface IProject {
     "Project UUID"
     uuid: UUID!

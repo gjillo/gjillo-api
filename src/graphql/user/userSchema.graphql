@@ -1,5 +1,20 @@
+"Represents basic interface for a user"
+interface IUser {
+    "User UUID"
+    uuid: UUID
+
+    "Display name"
+    name: String
+
+    "Email address"
+    email: EmailAddress,
+
+    "Profile picture url"
+    image: URL
+}
+
 "Represents a user"
-type User {
+type User implements IUser{
     "User UUID"
     uuid: UUID
 

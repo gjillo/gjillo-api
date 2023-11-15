@@ -22,9 +22,10 @@ const resolver = {
 
       return result[0]['value'];
     },
+    // TODO this shouldn't be copy pasted from cardDetails.resolver.ts
     tags(parent) {
       return SQL`
-          SELECT value, color
+          SELECT select_option_uuid as uuid, value, color
           FROM core.cards
               JOIN core.select_values USING (card_uuid)
               JOIN core.select_options USING (select_option_uuid)

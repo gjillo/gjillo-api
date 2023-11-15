@@ -16,5 +16,5 @@ type ProjectDetails implements IProject {
     milestones: [Milestone!]!
 
     "Assigned users"
-    users: [User!]!
+    users: [ProjectUser!]!
 }

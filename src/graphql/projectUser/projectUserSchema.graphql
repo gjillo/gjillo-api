@@ -1,0 +1,17 @@
+"Represents a user"
+type ProjectUser implements IUser{
+    "User UUID"
+    uuid: UUID
+
+    "Display name"
+    name: String
+
+    "Email address"
+    email: EmailAddress,
+
+    "Profile picture url"
+    image: URL
+
+    "Permission level for the project"
+    permissions: Int
+}
