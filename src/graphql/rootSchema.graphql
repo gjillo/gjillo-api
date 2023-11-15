@@ -41,4 +41,16 @@ type Subscription {
 
     "User removed from project"
     project_user_removed: Project!
+
+    "Column created"
+    column_created: Column!
+
+    "Column updated"
+    column_updated: Column!
+
+    "Card added to column"
+    column_card_added: Column!
+
+    "Card removed from column"
+    column_card_removed: Column!
 }

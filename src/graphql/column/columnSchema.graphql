@@ -13,7 +13,7 @@ type Column {
     type: ColumnType
 
     "Description as plain text"
-    description: String!
+    description: String
 
     "Contained cards"
     cards: [Card!]!
@@ -29,4 +29,53 @@ enum ColumnType {
 
     "Cards in this column are considered as finished"
     done
+}
+
+
+"Column-specific mutations"
+type ColumnMutation {
+    "Create column"
+    create(
+        "Column UUID"
+        uuid: UUID!
+
+        "Display name"
+        name: String
+
+        "Column type"
+        type: ColumnType
+
+        "Description as plain text"
+        description: String
+    ): Column!
+
+    "Update column"
+    update(
+        "Column UUID"
+        uuid: UUID!
+
+        "New display name"
+        name: String
+
+        "New order in which to display the column"
+        order: Int
+
+        "New column type"
+        type: ColumnType
+
+        "New description as plain text"
+        description: String!
+    ): Column!
+
+    "Add card"
+    add_card(
+        "Card UUID"
+        uuid: UUID!
+    ): Column!
+
+    "Remove card"
+    remove_card(
+        "Card UUID"
+        uuid: UUID!
+    ): Column!
 }
