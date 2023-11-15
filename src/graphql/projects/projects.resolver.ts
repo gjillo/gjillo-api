@@ -40,7 +40,7 @@ const mutation = {
     async add_user(_, { uuid }) {
       // const result = await SQL``;
       //
-      void pubsub.publish("projects/user_added", {uuid});
+      void pubsub.publish("projects/updated", {uuid});
 
       // return result[0];
     },
@@ -48,7 +48,7 @@ const mutation = {
     async remove_user(_, { uuid }) {
       // const result = await SQL``;
       //
-      void pubsub.publish("projects/user_removed", {uuid});
+      void pubsub.publish("projects/updated", {uuid});
 
       // return result[0];
     },
@@ -61,12 +61,6 @@ const subscription = {
   },
   project_updated: {
     subscribe: () => pubsub.asyncIterator(['projects/updated'])
-  },
-  project_user_added: {
-    subscribe: () => pubsub.asyncIterator(['projects/user_added'])
-  },
-  project_user_removed: {
-    subscribe: () => pubsub.asyncIterator(['projects/user_removed'])
   },
 }
 

@@ -24,11 +24,11 @@ type Mutation {
 }
 
 type Subscription {
-    "Card details updated"
-    card_details_updated: Card!
+    "Card created"
+    card_created: Card!
 
-    "Card field updated"
-    card_field_updated: Card!
+    "Card updated"
+    card_updated: Card!
 
     "Project created"
     project_created: Project!
@@ -36,21 +36,9 @@ type Subscription {
     "Project updated"
     project_updated: Project!
 
-    "User added to project"
-    project_user_added: Project!
-
-    "User removed from project"
-    project_user_removed: Project!
-
     "Column created"
     column_created: Column!
 
     "Column updated"
     column_updated: Column!
-
-    "Card added to column"
-    column_card_added: Column!
-
-    "Card removed from column"
-    column_card_removed: Column!
 }

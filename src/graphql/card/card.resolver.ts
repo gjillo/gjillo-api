@@ -38,38 +38,44 @@ const resolver = {
 const mutation = {
   CardsMutation: {
     // TODO change mutation parameters
+    async create(_, { uuid, name, email, image }) {
+      void pubsub.publish("card/created", {});
+      // const result = await SQL``;
+      //
+      // return result[0];
+    },
     async update_details(_, { uuid, name, email, image }) {
-      void pubsub.publish("card/details_updated", {});
+      void pubsub.publish("card/updated", {});
       // const result = await SQL``;
       //
       // return result[0];
     },
     async update_text_field(_, { uuid, name, email, image }) {
-      void pubsub.publish("card/field_updated", {});
+      void pubsub.publish("card/updated", {});
       // const result = await SQL``;
       //
       // return result[0];
     },
     async update_number_field(_, { uuid, name, email, image }) {
-      void pubsub.publish("card/field_updated", {});
+      void pubsub.publish("card/updated", {});
       // const result = await SQL``;
       //
       // return result[0];
     },
     async update_checkbox_field(_, { uuid, name, email, image }) {
-      void pubsub.publish("cards/field_updated", {});
+      void pubsub.publish("card/updated", {});
       // const result = await SQL``;
       //
       // return result[0];
     },
     async update_date_field(_, { uuid, name, email, image }) {
-      void pubsub.publish("cards/field_updated", {uuid});
+      void pubsub.publish("card/updated", {uuid});
       // const result = await SQL``;
       //
       // return result[0];
     },
     async update_select_field(_, { uuid, name, email, image }) {
-      void pubsub.publish("card/field_updated", {uuid});
+      void pubsub.publish("card/updated", {uuid});
       // const result = await SQL``;
       //
       // return result[0];
@@ -78,11 +84,11 @@ const mutation = {
 };
 
 const subscription = {
-  card_details_updated: {
-    subscribe: () => pubsub.asyncIterator(['card/details_updated'])
+  card_created: {
+    subscribe: () => pubsub.asyncIterator(['card/created'])
   },
-  card_field_updated: {
-    subscribe: () => pubsub.asyncIterator(['card/field_updated'])
+  card_updated: {
+    subscribe: () => pubsub.asyncIterator(['card/updated'])
   },
 }
 

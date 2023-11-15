@@ -24,11 +24,11 @@ const mutation = {
     },
 
     async add_card(_, { uuid }) {
-      void pubsub.publish("column/card_added", {uuid});
+      void pubsub.publish("column/updated", {uuid, name});
     },
 
     async remove_card(_, { uuid }) {
-      void pubsub.publish("column/card_removed", {uuid});
+      void pubsub.publish("column/updated", {uuid, name});
     },
   },
 };
@@ -39,12 +39,6 @@ const subscription = {
   },
   column_updated: {
     subscribe: () => pubsub.asyncIterator(['column/updated'])
-  },
-  column_card_added: {
-    subscribe: () => pubsub.asyncIterator(['column/card_added'])
-  },
-  column_card_removed: {
-    subscribe: () => pubsub.asyncIterator(['column/card_removed'])
   },
 }
 

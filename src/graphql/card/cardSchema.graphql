@@ -60,6 +60,30 @@ type Card implements ICard{
 
 "Card-specific mutations"
 type CardsMutation {
+    "Create card"
+    create(
+        "Card UUID"
+        uuid: UUID!
+
+        "Display name"
+        name: String
+
+        "Card description as Markdown"
+        description: String
+
+        "Assigned story points"
+        story_points: Int
+
+        "Assigned user UUIDs"
+        assignee_uuids: [UUID!]
+
+        "Deadline"
+        deadline: DateTime
+
+        "Assigned tag UUIDs"
+        tags: [UUID!]
+    ): Card!
+
     "Update card details"
     update_details(
         "Card UUID"
