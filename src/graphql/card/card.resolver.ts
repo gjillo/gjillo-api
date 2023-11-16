@@ -40,8 +40,15 @@ const resolver = {
           FROM core.milestones
               JOIN core.cards USING (milestone_uuid)
           WHERE card_uuid = ${parent.uuid}`;
-      console.log(parent.uuid)
-      console.log(result)
+
+      return result[0]
+    },
+    async column(parent) {
+      const result = await SQL`
+          SELECT columns.name, columns.order, columns.type, columns.description, column_uuid as uuid, project_uuid
+          FROM core.columns
+              JOIN core.cards USING (column_uuid)
+          WHERE card_uuid = ${parent.uuid}`;
 
       return result[0]
     },

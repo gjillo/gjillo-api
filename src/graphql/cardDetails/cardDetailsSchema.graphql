@@ -32,4 +32,7 @@ type CardDetails implements ICard {
 
     "Assigned milestone"
     milestone: Milestone
+
+    "Assigned column"
+    column: Column
 }
