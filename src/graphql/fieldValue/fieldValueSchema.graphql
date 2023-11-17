@@ -1,21 +1,32 @@
+"All possible field values"
 union FieldValue = FieldTextValue | FieldSelectValue | FieldNumberValue | FieldDateValue | FieldCheckboxValue
 
+"Represents text field value"
 type FieldTextValue {
+    "Value as a text"
     text_value: String
 }
 
+"Represents number field value"
 type FieldNumberValue {
+    "Value as a number"
     number_value: Float!
 }
 
+"Represents checkbox field value"
 type FieldCheckboxValue {
+    "Value as a boolean"
     checkbox_value: Boolean!
 }
 
+"Represents date field value"
 type FieldDateValue {
+    "Value as a date"
     date_value: DateTime!
 }
 
+"Represents dropdown field value"
 type FieldSelectValue {
+    "Value as a string"
     select_value: String!
 }

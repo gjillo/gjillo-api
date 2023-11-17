@@ -1,11 +1,47 @@
 type Query {
+    "Basic projects information"
     projects: [Project!]!
 
+    "Detailed project information"
     project(projectUuid: UUID!): ProjectDetails
 
+    "User information"
+    user(userUuid: UUID!): User
+
+    "Detailed card information"
     card_details(cardUuid: UUID!): CardDetails
 }
 
 type Mutation {
+    "Mutations related to projects"
     projects: ProjectsMutation!
+
+    "Mutations related to users"
+    users: UsersMutation!
+
+    "Mutations related to cards"
+    cards: CardsMutation!
+
+    "Mutations related to milestones"
+    milestones: MilestoneMutation!
+}
+
+type Subscription {
+    "Card created"
+    card_created: Card!
+
+    "Card updated"
+    card_updated: Card!
+
+    "Project created"
+    project_created: Project!
+
+    "Project updated"
+    project_updated: Project!
+
+    "Column created"
+    column_created: Column!
+
+    "Column updated"
+    column_updated: Column!
 }

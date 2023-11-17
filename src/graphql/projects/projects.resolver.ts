@@ -1,4 +1,5 @@
 import { SQL } from "../../database/Connection";
+import { pubsub } from "../context";
 
 const resolver = {
   Query: {
@@ -19,6 +20,8 @@ const mutation = {
           VALUES (${name})
           RETURNING project_uuid AS uuid, name, creation_timestamp as "created"`;
 
+      void pubsub.publish("projects/created", {name});
+
       return result[0];
     },
 
@@ -29,9 +32,38 @@ const mutation = {
           WHERE project_uuid = ${uuid}
           RETURNING project_uuid AS uuid, name, creation_timestamp as "created"`;
 
+      void pubsub.publish("projects/updated", {uuid, name});
+
       return result[0];
+    },
+
+    // TODO
+    async add_user(_, { project_uuid, user_uuid }) {
+      // const result = await SQL``;
+      //
+      void pubsub.publish("projects/updated", { project_uuid, user_uuid });
+
+      // return result[0];
+    },
+
+    // TODO
+    async remove_user(_, { project_uuid, user_uuid }) {
+      // const result = await SQL``;
+      //
+      void pubsub.publish("projects/updated", { project_uuid, user_uuid });
+
+      // return result[0];
     },
   },
 };
 
-export { resolver, mutation };
+const subscription = {
+  project_created: {
+    subscribe: () => pubsub.asyncIterator(['projects/created'])
+  },
+  project_updated: {
+    subscribe: () => pubsub.asyncIterator(['projects/updated'])
+  },
+}
+
+export {resolver, mutation, subscription}

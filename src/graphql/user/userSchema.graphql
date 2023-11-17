@@ -1,6 +1,47 @@
-type User {
+"Represents basic interface for a user"
+interface IUser {
+    "User UUID"
     uuid: UUID
+
+    "Display name"
     name: String
+
+    "Email address"
     email: EmailAddress,
+
+    "Profile picture url"
     image: URL
+}
+
+"Represents a user"
+type User implements IUser{
+    "User UUID"
+    uuid: UUID
+
+    "Display name"
+    name: String
+
+    "Email address"
+    email: EmailAddress,
+
+    "Profile picture url"
+    image: URL
+}
+
+"User-specific mutations"
+type UsersMutation {
+    "Update user information"
+    update(
+        "User UUID"
+        uuid: UUID!
+
+        "New display name"
+        name: String
+
+        "New email address"
+        email: EmailAddress
+
+        "New profile picture image url"
+        image: URL
+    ): User!
 }

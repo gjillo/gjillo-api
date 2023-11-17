@@ -12,15 +12,13 @@ const resolver = {
     },
   },
   CardDetails: {
-    async assignee(parent) {
-      const result = await SQL`
+    assignees(parent) {
+      return SQL`
           SELECT auth.users.id as uuid, auth.users.name as name, email, image
           FROM core.cards
               JOIN core.card_users USING (card_uuid)
               JOIN auth.users ON core.card_users.user_uuid = auth.users.id
           WHERE card_uuid = ${parent.uuid}`;
-
-      return result[0];
     },
     async deadline(parent) {
       const result = await SQL`
@@ -35,7 +33,7 @@ const resolver = {
     },
     tags(parent) {
       return SQL`
-          SELECT value, color
+          SELECT select_option_uuid as uuid, value, color
           FROM core.cards
               JOIN core.select_values USING (card_uuid)
               JOIN core.select_options USING (select_option_uuid)
@@ -53,7 +51,27 @@ const resolver = {
         data: v,
       }));
     },
+    async milestone(parent) {
+      const result = await SQL`
+          SELECT milestone_uuid as uuid, milestones.name, milestones.creation_timestamp, deadline
+          FROM core.milestones
+              JOIN core.cards USING (milestone_uuid)
+          WHERE card_uuid = ${parent.uuid}`;
+
+      return result[0]
+    },
+    async column(parent) {
+      const result = await SQL`
+          SELECT columns.name, columns.order, columns.type, columns.description, column_uuid as uuid, project_uuid
+          FROM core.columns
+              JOIN core.cards USING (column_uuid)
+          WHERE card_uuid = ${parent.uuid}`;
+
+      return result[0]
+    },
   },
 };
+
+
 
 export { resolver };

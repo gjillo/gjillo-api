@@ -1,0 +1,62 @@
+"Represents a milestone"
+type Milestone {
+    "Milestone UUID"
+    uuid: UUID!
+
+    "Display name"
+    name: String
+
+    "Creation time"
+    creation_timestamp: DateTime!
+
+    "Deadline"
+    deadline: DateTime
+
+    "Assigned cards"
+    cards: [Card!]!
+}
+
+"Milestone-specific mutations"
+type MilestoneMutation {
+    "Create milestone"
+    create(
+        "Display name"
+        name: String
+
+        "Deadline"
+        deadline: DateTime
+
+        "UUID of the project to which the milestone is assigned"
+        project_uuid: UUID!
+    ): Milestone!
+
+    "Update milestone information"
+    update(
+        "Milestone UUID"
+        uuid: UUID!
+
+        "New display name"
+        name: String
+
+        "New deadline"
+        deadline: DateTime
+
+        "New UUID of the project to which the milestone is assigned"
+        project_uuid: UUID
+    ): Milestone
+
+    "Assign card"
+    assign_card(
+        "Milestone UUID"
+        milestone_uuid: UUID!
+
+        "Card UUID"
+        card_uuid: UUID!
+    ): Column!
+
+    "Unassign card"
+    unassign_card(
+        "Card UUID"
+        card_uuid: UUID!
+    ): Column!
+}

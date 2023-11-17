@@ -1,4 +1,11 @@
+"Represents a tag"
 type Tag {
+    "Tag UUID"
+    uuid: UUID!
+
+    "Tag value"
     value: String!
+
+    "Tag color"
     color: HexColorCode
 }

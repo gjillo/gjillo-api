@@ -1,12 +1,38 @@
+"Card with values of all fields"
 type CardDetails implements ICard {
+    "UUID"
     uuid: UUID!
+
+    "Display name"
     name: String
+
+    "Card description as Markdown"
     description: String
+
+    "Assigned story points"
     story_points: Int
+
+    "Creation time"
     created: DateTime!
+
+    "Order in column"
     order: Int!
-    assignee: User
+
+    "Assigned users"
+    assignees: [User!]!
+
+    "Deadline"
     deadline: DateTime
+
+    "Assigned tags"
     tags: [Tag!]!
+
+    "Card fields"
     fields: [CardField!]!
+
+    "Assigned milestone"
+    milestone: Milestone
+
+    "Assigned column"
+    column: Column
 }

@@ -1,16 +1,53 @@
+"Represents basic interface for a project"
 interface IProject {
+    "Project UUID"
     uuid: UUID!
+
+    "Display name"
     name: String!
+
+    "Creation time"
     created: DateTime!
 }
 
+"Basic project"
 type Project implements IProject {
+    "Project UUID"
     uuid: UUID!
+
+    "Display name"
     name: String!
+
+    "Creation time"
     created: DateTime!
 }
 
+"Project-specific mutations"
 type ProjectsMutation {
-    create(name: String!): ProjectDetails!
-    update(uuid: UUID!, name: String): ProjectDetails!
+    "Create a new project"
+    create(
+        "Project display name"
+        name: String!
+    ): ProjectDetails!
+
+    "Update project information"
+    update(
+        "Project UUID"
+        uuid: UUID!
+
+        "New project name"
+        name: String
+    ): ProjectDetails!
+
+    "Add user to project"
+    add_user(
+        "User UUID"
+        uuid: UUID!
+    ): ProjectDetails!
+
+    "Remove user from project"
+    remove_user(
+        "User UUID"
+        uuid: UUID!
+    ): ProjectDetails!
 }

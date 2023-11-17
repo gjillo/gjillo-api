@@ -1,4 +1,5 @@
 import { SQL } from '../../database/Connection';
+import {pubsub} from "../context";
 
 const resolver = {
   Column: {
@@ -12,4 +13,32 @@ const resolver = {
   },
 };
 
-export { resolver };
+const mutation = {
+  ColumnMutation: {
+    // TODO
+    async create(_, { project_uuid, name, type, description }) {
+      void pubsub.publish("column/created", {project_uuid, name, type, description});
+    },
+
+    // TODO
+    async update(_, { column_uuid, name, order, type, description }) {
+      void pubsub.publish("column/updated", {column_uuid, name, order, type, description});
+    },
+
+    // TODO
+    async assign_card(_, { column_uuid, card_uuid }) {
+      void pubsub.publish("column/updated", {column_uuid, card_uuid});
+    },
+  },
+};
+
+const subscription = {
+  column_created: {
+    subscribe: () => pubsub.asyncIterator(['column/created'])
+  },
+  column_updated: {
+    subscribe: () => pubsub.asyncIterator(['column/updated'])
+  },
+}
+
+export {resolver, mutation, subscription}

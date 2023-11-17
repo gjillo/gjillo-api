@@ -19,6 +19,19 @@ const resolver = {
         WHERE project_uuid = ${parent.uuid}
         ORDER BY "order"`;
     },
+    users(parent) {
+      return SQL`
+        SELECT id as uuid, users.name, email, image, permissions
+        FROM auth.users
+            JOIN core.project_users ON users.id = project_users.user_uuid
+            JOIN core.projects USING (project_uuid)
+        WHERE project_uuid = ${parent.uuid}`;
+    },
+    milestones(parent) {
+      return SQL`
+        SELECT milestone_uuid as uuid, name, creation_timestamp, deadline FROM core.milestones
+        WHERE project_uuid=${parent.uuid}`;
+    },
   },
 };
 
