@@ -20,7 +20,7 @@ const resolver = {
           WHERE card_uuid = ${parent.uuid}
             AND role = 'deadline'`;
 
-      return result[0]['value'];
+      return result[0]?.value;
     },
     // TODO this shouldn't be copy pasted from cardDetails.resolver.ts
     tags(parent) {
@@ -64,12 +64,67 @@ const update_field = async (_, { card_uuid, field_uuid, value }) => {
 
 const mutation = {
   CardsMutation: {
-    // TODO
-    async create(_, { name, description, story_points, assignee_uuids, deadline, tag_uuids }) {
-      void pubsub.publish("card/created", { name, description, story_points, assignee_uuids, deadline, tag_uuids });
-      // const result = await SQL``;
-      //
-      // return result[0];
+    // TODO await all promises at the end or when needed and not every time. Best if there would be less than 10 separate queries
+    async create(_, { name, description, story_points, column_uuid, milestone_uuid, assignee_uuids, deadline, tag_uuids }) {
+      const result = await SQL`
+        INSERT INTO core.cards(name, description, story_points, column_uuid, milestone_uuid)
+        VALUES (
+            ${name || null},
+            ${description || null},
+            ${story_points || null},
+            ${column_uuid || null},
+            ${milestone_uuid || null}
+          )
+        RETURNING card_uuid as uuid, name, description, story_points, creation_timestamp as created, "order"`;
+
+      const card = result[0];
+
+      if (assignee_uuids != null) {
+        const card_users = assignee_uuids.map( assignee_uuid => {
+          return {
+            user_uuid: assignee_uuid,
+            card_uuid: card.uuid,
+          }
+        })
+        await SQL`INSERT INTO core.card_users ${SQL(card_users)}`
+      }
+
+      if (deadline != null) {
+        await SQL`
+          INSERT INTO core.date_values (value, card_uuid, field_uuid)
+          SELECT ${deadline}, ${card.uuid}, field_uuid
+          FROM core.fields
+            JOIN core.columns USING (project_uuid)
+            JOIN core.cards USING (column_uuid)
+          WHERE card_uuid = ${card.uuid}
+            AND role = 'deadline'`
+      }
+
+      if (tag_uuids != null) {
+        const tagsFieldUUIDResult = await SQL`SELECT field_uuid
+          FROM core.fields
+            JOIN core.columns USING (project_uuid)
+            JOIN core.cards USING (column_uuid)
+          WHERE card_uuid = ${card.uuid}
+            AND role = 'tags'`
+        const tagsFieldUUID = tagsFieldUUIDResult[0].field_uuid
+        const tagUUIDs = tag_uuids.map( tag_uuid => {
+          return {
+            card_uuid: card.uuid,
+            field_uuid: tagsFieldUUID,
+            select_option_uuid: tag_uuid,
+          }
+        })
+        await SQL`INSERT INTO core.select_values ${SQL(tagUUIDs)}`
+      }
+
+      card.asignees = await resolver.Card.assignees(card)
+      card.deadline = await resolver.Card.deadline(card)
+      card.tags = await resolver.Card.tags(card)
+      card.milestone = await resolver.Card.milestone(card)
+      card.column = await resolver.Card.column(card)
+      void pubsub.publish("card/created", card);
+      return card;
     },
     // TODO
     async update_details(_, { uuid, name, description, story_points, order, asignee_uuids, deadline, tag_uuids }) {

@@ -29,6 +29,9 @@ interface ICard {
 
     "Assigned milestone"
     milestone: Milestone
+
+    "Assigned column"
+    column: Column
 }
 
 "Basic card"
@@ -71,9 +74,6 @@ type Card implements ICard{
 type CardsMutation {
     "Create card"
     create(
-        "Card UUID"
-        uuid: UUID!
-
         "Display name"
         name: String
 
@@ -94,6 +94,9 @@ type CardsMutation {
 
         "Assigned milestone UUID"
         milestone_uuid: UUID
+
+        "Assigned column UUID"
+        column_uuid: UUID!
     ): Card!
 
     "Update card details"
@@ -124,6 +127,9 @@ type CardsMutation {
 
         "New assigned milestone UUID"
         milestone_uuid: UUID
+
+        "New assigned column UUID"
+        column_uuid: UUID!
     ): Card!
 
     "Update custom text field"
