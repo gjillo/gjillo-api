@@ -57,15 +57,21 @@ type ColumnMutation {
         "New display name"
         name: String
 
-        "New order in which to display the column"
-        order: Int
-
         "New column type"
         type: ColumnType
 
         "New description as plain text"
         description: String
     ): Column!
+
+    "Swap column position with another column"
+    swap(
+        "Column UUID"
+        uuid: UUID!
+
+        "Other column UUID"
+        other_uuid: UUID!
+    ): Void
 
     "Assign card"
     assign_card(

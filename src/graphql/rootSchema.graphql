@@ -19,6 +19,9 @@ type Mutation {
     "Mutations related to users"
     users: UsersMutation!
 
+    "Mutations related to columns"
+    columns: ColumnMutation!
+
     "Mutations related to cards"
     cards: CardsMutation!
 

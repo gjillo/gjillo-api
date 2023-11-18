@@ -57,14 +57,16 @@ const resolver = {
 
 
 // TODO
-// update_select_field select could require separate function
+//  update_select_field select could require separate function
 const update_field = async (_, { card_uuid, field_uuid, value }) => {
   void pubsub.publish("card/updated", {});
 }
 
 const mutation = {
   CardsMutation: {
-    // TODO await all promises at the end or when needed and not every time. Best if there would be less than 10 separate queries
+    // TODO await all promises at the end or when needed and not every time.
+    //  Best if there would be less than 10 separate queries.
+    //  All inserts should also be only one transaction
     async create(_, { name, description, story_points, column_uuid, milestone_uuid, assignee_uuids, deadline, tag_uuids }) {
       const result = await SQL`
         INSERT INTO core.cards(name, description, story_points, column_uuid, milestone_uuid)

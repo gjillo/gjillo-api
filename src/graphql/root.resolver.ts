@@ -13,6 +13,9 @@ const resolver = {
     cards() {
       return {};
     },
+    columns() {
+      return {};
+    },
   },
 };
 
