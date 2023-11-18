@@ -72,13 +72,4 @@ type ColumnMutation {
         "Other column UUID"
         other_uuid: UUID!
     ): Void
-
-    "Assign card"
-    assign_card(
-        "Column UUID"
-        column_uuid: UUID!
-
-        "Card UUID"
-        card_uuid: UUID!
-    ): Column!
 }

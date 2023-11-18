@@ -59,11 +59,6 @@ const mutation = {
       // TODO What should subscription return? Array of two coulmns?
       void pubsub.publish("column/updated", {});
     },
-
-    // TODO
-    async assign_card(_, { column_uuid, card_uuid }) {
-      void pubsub.publish("column/updated", {column_uuid, card_uuid});
-    },
   },
 };
 

@@ -113,24 +113,30 @@ type CardsMutation {
         "New assigned story points value"
         story_points: Int
 
-        "New order in column"
-        order: Int
-
-        "New asignee UUIDs"
-        asignee_uuids: [UUID!]!
+        "New assignee UUIDs"
+        assignee_uuids: [UUID!]
 
         "New deadline"
         deadline: DateTime
 
         "New tag UUIDs"
-        tag_uuids: [UUID!]!
+        tag_uuids: [UUID!]
 
         "New assigned milestone UUID"
         milestone_uuid: UUID
 
         "New assigned column UUID"
-        column_uuid: UUID!
+        column_uuid: UUID
     ): Card!
+
+    "Swap card position with another card"
+    swap(
+        "Card UUID"
+        uuid: UUID!
+
+        "Other card UUID"
+        other_uuid: UUID!
+    ): Void
 
     "Update custom text field"
     update_text_field(
