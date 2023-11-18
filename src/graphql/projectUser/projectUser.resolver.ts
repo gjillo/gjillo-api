@@ -18,9 +18,9 @@ const mutation = {
             const result = await SQL`
                 UPDATE core.users
                 SET 
-                    name = COALESCE(${name}, name),
-                    email = COALESCE(${email}, email),
-                    image = COALESCE(${image}, image),
+                    name = ${name === undefined ? SQL`name` : name},
+                    email = ${email === undefined ? SQL`email` : email},
+                    image = ${image === undefined ? SQL`image` : image}
                 WHERE id = ${uuid}
                 RETURNING id AS uuid, name, email, image`;
 

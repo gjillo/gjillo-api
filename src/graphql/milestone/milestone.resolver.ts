@@ -27,9 +27,9 @@ const mutation = {
             const result = await SQL`
                 UPDATE core.milestones
                 SET 
-                    name = COALESCE(${name}, name),
-                    deadline = COALESCE(${deadline}, deadline),
-                    project_uuid = COALESCE(${project_uuid}, project_uuid),
+                    name = ${name === undefined ? SQL`name` : name},
+                    deadline = ${deadline === undefined ? SQL`deadline` : deadline},
+                    project_uuid = ${project_uuid === undefined ? SQL`project_uuid` : project_uuid}
                 WHERE milestone_uuid = ${uuid}
                 RETURNING milestone_uuid AS uuid, name, deadline, creation_timestamp, project_uuid`;
 

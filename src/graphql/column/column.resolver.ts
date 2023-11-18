@@ -35,9 +35,9 @@ const mutation = {
       const result = await SQL`
         UPDATE core.columns
         SET 
-            name = COALESCE(${name}, name),
-            type = COALESCE(${type}, type),
-            description = COALESCE(${description}, description)
+            name = ${name === undefined ? SQL`name` : name},
+            type = ${type === undefined ? SQL`type` : type},
+            description = ${description === undefined ? SQL`description` : description}
         WHERE column_uuid = ${uuid}
         RETURNING column_uuid AS uuid, name, "order", type, description, project_uuid`;
 

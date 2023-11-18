@@ -134,50 +134,63 @@ const mutation = {
       const result = await SQL`
         UPDATE core.cards
         SET
-          name = COALESCE(${name}, name),
-          description = COALESCE(${description}, description),
-          story_points = COALESCE(${story_points}, story_points),
-          column_uuid = COALESCE(${column_uuid}, column_uuid),
-          milestone_uuid = COALESCE(${milestone_uuid}, milestone_uuid)
+          name = ${name === undefined ? SQL`name` : name},
+          description = ${description === undefined ? SQL`description` : description},
+          story_points = ${story_points === undefined ? SQL`story_points` : story_points},
+          column_uuid = ${column_uuid === undefined ? SQL`column_uuid` : column_uuid},
+          milestone_uuid = ${milestone_uuid === undefined ? SQL`milestone_uuid` : milestone_uuid}
         WHERE card_uuid = ${uuid}
         RETURNING card_uuid as uuid, name, description, story_points, creation_timestamp as created, "order"`;
       const card = result[0];
 
-      if (deadline != null) {
-        await SQL`
-          UPDATE core.date_values
-          SET value = ${deadline}
-          WHERE card_uuid = ${card.uuid}
-            AND field_uuid IN (
-              SELECT field_uuid
-              FROM core.fields
-                JOIN core.columns USING (project_uuid)
-                JOIN core.cards USING (column_uuid)
-              WHERE card_uuid = ${card.uuid}
-                AND role = 'deadline'
-            )
-           `
-      }
 
-      if (assignee_uuids != null) {
-        // Transaction
-        await SQL.begin(async SQL => {
+      if (deadline !== undefined) {
+        if (deadline === null) {
           await SQL`
-          DELETE FROM core.card_users
-          WHERE card_uuid = ${card.uuid}
-            AND user_uuid NOT IN ${SQL(assignee_uuids)}`
-
-          const card_users = assignee_uuids.map( assignee_uuid => {
-            return {
-              user_uuid: assignee_uuid,
-              card_uuid: card.uuid,
-            }
-          })
-          await SQL`INSERT INTO core.card_users ${SQL(card_users)} ON CONFLICT DO NOTHING`
-        })
+            DELETE FROM core.date_values
+            WHERE card_uuid = ${uuid}`
+        } else {
+          await SQL`
+            UPDATE core.date_values
+            SET value = ${deadline}
+            WHERE card_uuid = ${card.uuid}
+              AND field_uuid IN (
+                SELECT field_uuid
+                FROM core.fields
+                  JOIN core.columns USING (project_uuid)
+                  JOIN core.cards USING (column_uuid)
+                WHERE card_uuid = ${card.uuid}
+                  AND role = 'deadline'
+              )
+             `
+        }
       }
 
-      if (tag_uuids != null) {
+      if (assignee_uuids !== undefined) {
+        if (assignee_uuids === null || assignee_uuids.length == 0) {
+          await SQL`
+            DELETE FROM core.card_users
+            WHERE card_uuid = ${card.uuid}`
+        } else {
+          // Transaction
+          await SQL.begin(async SQL => {
+            await SQL`
+              DELETE FROM core.card_users
+              WHERE card_uuid = ${card.uuid}
+                AND user_uuid NOT IN ${SQL(assignee_uuids)}`
+
+            const card_users = assignee_uuids.map( assignee_uuid => {
+              return {
+                user_uuid: assignee_uuid,
+                card_uuid: card.uuid,
+              }
+            })
+            await SQL`INSERT INTO core.card_users ${SQL(card_users)} ON CONFLICT DO NOTHING`
+          })
+        }
+      }
+
+      if (tag_uuids !== undefined) {
         const tagsFieldUUIDResult = await SQL`SELECT field_uuid
           FROM core.fields
             JOIN core.columns USING (project_uuid)
@@ -185,14 +198,20 @@ const mutation = {
           WHERE card_uuid = ${card.uuid}
             AND role = 'tags'`
         const tagsFieldUUID = tagsFieldUUIDResult[0].field_uuid
-        const tagUUIDs = tag_uuids.map( tag_uuid => {
-          return {
-            card_uuid: card.uuid,
-            field_uuid: tagsFieldUUID,
-            select_option_uuid: tag_uuid,
-          }
-        })
-        await SQL`INSERT INTO core.select_values ${SQL(tagUUIDs)} ON CONFLICT DO NOTHING`
+        if (tag_uuids === null || tag_uuids.length == 0) {
+          await SQL`
+            DELETE FROM core.select_values
+            WHERE card_uuid = ${card.uuid}`
+        } else {
+          const tagUUIDs = tag_uuids.map( tag_uuid => {
+            return {
+              card_uuid: card.uuid,
+              field_uuid: tagsFieldUUID,
+              select_option_uuid: tag_uuid,
+            }
+          })
+          await SQL`INSERT INTO core.select_values ${SQL(tagUUIDs)} ON CONFLICT DO NOTHING`
+        }
       }
 
       card.assignees = await resolver.Card.assignees(card)
