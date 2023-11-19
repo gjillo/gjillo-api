@@ -17,4 +17,7 @@ type ProjectDetails implements IProject {
 
     "Assigned users"
     users: [ProjectUser!]!
+
+    "Tags"
+    tags: [Tag!]!
 }
