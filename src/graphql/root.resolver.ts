@@ -10,6 +10,12 @@ const resolver = {
     milestones() {
       return {};
     },
+    cards() {
+      return {};
+    },
+    columns() {
+      return {};
+    },
   },
 };
 

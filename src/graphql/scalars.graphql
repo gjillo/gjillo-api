@@ -3,3 +3,4 @@ scalar EmailAddress
 scalar URL
 scalar UUID
 scalar HexColorCode
+scalar Void

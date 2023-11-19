@@ -15,19 +15,49 @@ const resolver = {
 
 const mutation = {
   ColumnMutation: {
-    // TODO
-    async create(_, { project_uuid, name, type, description }) {
-      void pubsub.publish("column/created", {project_uuid, name, type, description});
+    async create(_, { name, type, description, project_uuid }) {
+      const result = await SQL`
+        INSERT INTO core.columns(name, type, description, project_uuid)
+        VALUES (
+          ${name || null},
+          ${type || null},
+          ${description || null},
+          ${project_uuid}
+        )
+        RETURNING project_uuid as uuid, name, type, description, "order"`;
+
+      const column = result[0];
+      void pubsub.publish("column/created", column);
+      return column
     },
 
-    // TODO
-    async update(_, { column_uuid, name, order, type, description }) {
-      void pubsub.publish("column/updated", {column_uuid, name, order, type, description});
+    async update(_, { uuid, name, type, description }) {
+      const result = await SQL`
+        UPDATE core.columns
+        SET 
+            name = ${name === undefined ? SQL`name` : name},
+            type = ${type === undefined ? SQL`type` : type},
+            description = ${description === undefined ? SQL`description` : description}
+        WHERE column_uuid = ${uuid}
+        RETURNING column_uuid AS uuid, name, "order", type, description, project_uuid`;
+
+      const column = result[0]
+      void pubsub.publish("column/updated", column);
+      return column;
     },
 
-    // TODO
-    async assign_card(_, { column_uuid, card_uuid }) {
-      void pubsub.publish("column/updated", {column_uuid, card_uuid});
+    async swap(_, { uuid, other_uuid }) {
+      await SQL`
+        UPDATE core.columns
+        SET "order" = (
+          SELECT SUM("order")
+          FROM core.columns
+          WHERE column_uuid IN (${uuid}, ${other_uuid})
+        ) - "order"
+        WHERE column_uuid IN (${uuid}, ${other_uuid})`;
+
+      // TODO What should subscription return? Array of two coulmns?
+      void pubsub.publish("column/updated", {});
     },
   },
 };

@@ -22,7 +22,9 @@ import {
   URLResolver,
   URLTypeDefinition,
   UUIDDefinition,
-  UUIDResolver
+  UUIDResolver,
+  VoidTypeDefinition,
+  VoidResolver
 } from "graphql-scalars";
 
 reportMissingEnvVars();
@@ -55,7 +57,8 @@ const PORT = parseInt(process.env?.PORT || '4000', 10);
       EmailAddressTypeDefinition,
       HexColorCodeDefinition,
       URLTypeDefinition,
-      UUIDDefinition
+      UUIDDefinition,
+      VoidTypeDefinition
     ],
     resolvers: [
       localResolvers,
@@ -64,6 +67,7 @@ const PORT = parseInt(process.env?.PORT || '4000', 10);
       { HexColorCode: HexColorCodeResolver },
       { URL: URLResolver },
       { UUID: UUIDResolver },
+      { Void: VoidResolver },
 
     ],
     plugins: [

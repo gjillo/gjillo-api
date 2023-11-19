@@ -28,7 +28,7 @@ const mutation = {
     async update(_, { uuid, name }) {
       const result = await SQL`
           UPDATE core.projects
-          SET name = COALESCE(${name}, name)
+          SET name = ${name === undefined ? SQL`name` : name}
           WHERE project_uuid = ${uuid}
           RETURNING project_uuid AS uuid, name, creation_timestamp as "created"`;
 
