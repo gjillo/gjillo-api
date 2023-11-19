@@ -5,23 +5,21 @@ spectaql:
   logoFile: graphql.ico
   faviconFile: graphql.ico
   displayAllServers: true
-  targetDir: public/docs
+  targetDir: public/docs/api
 
 introspection:
   removeTrailingPeriodFromDescriptions: false
-  url: http://localhost:4000/graphql
+#  url: http://localhost:4000/graphql
   queryNameStrategy: capitalizeFirst
   fieldExpansionDepth: 2
-
-  spectaqlDirective:
-    enable: true
+  schemaFile: ./**/*.graphql
 
 extensions:
   graphqlScalarExamples: true
 
 info:
-  title: GraphQL API Reference
-  description: This is the GraphQL API Reference for the Gjillo application
+  title: Gjillo GraphQL API Reference
+  description: This is the GraphQL API Reference for the Gjillo
 #  description: Welcome to the party!
 #  termsOfService: https://www.example.com/terms
 #  contact:
@@ -36,8 +34,13 @@ info:
 #      description: Some important stuff we wanted you to know. Supports `markdown`
 
 servers:
+  - url: https://gjillo.spookyless.net/api/graphql
+    description: Production server
+    production: true
   - url: http://localhost:4000/graphql
-    description: Local developement server
+    description: Local development server
+    production: false
+
 #  - url: https://example.com/graphql
 #    description: Production
 #    production: true

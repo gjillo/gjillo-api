@@ -42,4 +42,4 @@ testem.log
 Thumbs.db
 
 .nx/cache
-/public/docs/
+/public/docs/api
