@@ -6,8 +6,7 @@
     "start": "nx serve",
     "build": "nx build",
     "test": "nx test",
-    "docs": "spectaql spectaql.config.yml",
-    "docs:watch": "spectaql -D spectaql.config.yml"
+    "docs": "spectaql spectaql.config.yml"
   },
   "engines": {
     "node": "^20.9.0"
