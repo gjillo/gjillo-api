@@ -32,6 +32,13 @@ const resolver = {
         SELECT milestone_uuid as uuid, name, creation_timestamp, deadline FROM core.milestones
         WHERE project_uuid=${parent.uuid}`;
     },
+    tags(parent) {
+      return SQL`
+        SELECT select_option_uuid as uuid, value, color FROM core.select_options
+          JOIN core.fields USING (field_uuid)
+        WHERE project_uuid=${parent.uuid}
+          AND role = 'tags'`;
+    },
   },
 };
 
