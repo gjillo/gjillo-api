@@ -20,7 +20,7 @@ const mutation = {
           VALUES (${name})
           RETURNING project_uuid AS uuid, name, creation_timestamp as "created"`;
 
-      void pubsub.publish("projects/created", {name});
+      void pubsub.publish("project_created", {name});
 
       return result[0];
     },
@@ -32,7 +32,7 @@ const mutation = {
           WHERE project_uuid = ${uuid}
           RETURNING project_uuid AS uuid, name, creation_timestamp as "created"`;
 
-      void pubsub.publish("projects/updated", {uuid, name});
+      void pubsub.publish("project_updated", {uuid, name});
 
       return result[0];
     },
@@ -41,7 +41,7 @@ const mutation = {
     async add_user(_, { project_uuid, user_uuid }) {
       // const result = await SQL``;
       //
-      void pubsub.publish("projects/updated", { project_uuid, user_uuid });
+      void pubsub.publish("project_updated", { project_uuid, user_uuid });
 
       // return result[0];
     },
@@ -50,7 +50,7 @@ const mutation = {
     async remove_user(_, { project_uuid, user_uuid }) {
       // const result = await SQL``;
       //
-      void pubsub.publish("projects/updated", { project_uuid, user_uuid });
+      void pubsub.publish("project_updated", { project_uuid, user_uuid });
 
       // return result[0];
     },
@@ -59,10 +59,10 @@ const mutation = {
 
 const subscription = {
   project_created: {
-    subscribe: () => pubsub.asyncIterator(['projects/created'])
+    subscribe: () => pubsub.asyncIterator(['project_created'])
   },
   project_updated: {
-    subscribe: () => pubsub.asyncIterator(['projects/updated'])
+    subscribe: () => pubsub.asyncIterator(['project_updated'])
   },
 }
 
