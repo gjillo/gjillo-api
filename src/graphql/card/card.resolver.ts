@@ -203,14 +203,23 @@ const mutation = {
             DELETE FROM core.select_values
             WHERE card_uuid = ${card.uuid}`
         } else {
-          const tagUUIDs = tag_uuids.map( tag_uuid => {
-            return {
-              card_uuid: card.uuid,
-              field_uuid: tagsFieldUUID,
-              select_option_uuid: tag_uuid,
-            }
+          await SQL.begin(async SQL => {
+            console.log("a")
+            console.log(tagsFieldUUID)
+            await SQL`
+              DELETE FROM core.select_values
+              WHERE card_uuid = ${card.uuid}
+                AND field_uuid = ${tagsFieldUUID}`
+
+            const tagUUIDs = tag_uuids.map( tag_uuid => {
+              return {
+                card_uuid: card.uuid,
+                field_uuid: tagsFieldUUID,
+                select_option_uuid: tag_uuid,
+              }
+            })
+            await SQL`INSERT INTO core.select_values ${SQL(tagUUIDs)} ON CONFLICT DO NOTHING`
           })
-          await SQL`INSERT INTO core.select_values ${SQL(tagUUIDs)} ON CONFLICT DO NOTHING`
         }
       }
 
