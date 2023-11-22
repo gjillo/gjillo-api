@@ -64,6 +64,12 @@ type ColumnMutation {
         description: String
     ): Column!
 
+    "Deletes a column"
+    delete(
+        "Column UUID"
+        uuid: UUID!
+    ): UUID!
+
     "Swap column position with another column"
     swap(
         "Column UUID"

@@ -29,7 +29,7 @@ const resolver = {
           WHERE card_uuid = ${parent.uuid}
             AND role = 'deadline'`;
 
-      return result[0]['value'];
+      return result.length > 0 ? result[0]['value'] : null
     },
     tags(parent) {
       return SQL`

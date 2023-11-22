@@ -47,4 +47,7 @@ type Subscription {
 
     "Column updated"
     column_updated: Column!
+
+    "Column got deleted"
+    column_deleted: UUID!
 }

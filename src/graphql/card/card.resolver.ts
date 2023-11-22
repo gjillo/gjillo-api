@@ -59,7 +59,7 @@ const resolver = {
 // TODO
 //  update_select_field select could require separate function
 const update_field = async (_, { card_uuid, field_uuid, value }) => {
-  void pubsub.publish("card/updated", {});
+  void pubsub.publish("card_updated", {});
 }
 
 const mutation = {
@@ -125,7 +125,7 @@ const mutation = {
       card.tags = await resolver.Card.tags(card)
       card.milestone = await resolver.Card.milestone(card)
       card.column = await resolver.Card.column(card)
-      void pubsub.publish("card/created", card);
+      void pubsub.publish("card_created", card);
       return card;
     },
 
@@ -229,7 +229,7 @@ const mutation = {
       card.milestone = await resolver.Card.milestone(card)
       card.column = await resolver.Card.column(card)
 
-      void pubsub.publish("card/updated", card);
+      void pubsub.publish("card_updated", card);
 
       return card
     },
@@ -245,7 +245,7 @@ const mutation = {
         WHERE card_uuid IN (${uuid}, ${other_uuid})`;
 
       // TODO What should subscription return? Array of two cards?
-      void pubsub.publish("card/updated", {});
+      void pubsub.publish("card_updated", {});
     },
 
     update_text_field: async (parent, input) => update_field(parent, input),
@@ -258,10 +258,10 @@ const mutation = {
 
 const subscription = {
   card_created: {
-    subscribe: () => pubsub.asyncIterator(['card/created'])
+    subscribe: () => pubsub.asyncIterator(['card_created'])
   },
   card_updated: {
-    subscribe: () => pubsub.asyncIterator(['card/updated'])
+    subscribe: () => pubsub.asyncIterator(['card_updated'])
   },
 }
 
