@@ -129,6 +129,45 @@ const mutation = {
       return card;
     },
 
+    async delete(_, { uuid }) {
+      const result = await SQL.begin(async SQL => {
+        await SQL`
+          DELETE FROM core.card_users
+          WHERE card_uuid = ${uuid}`
+
+        await SQL`
+          DELETE FROM core.checkbox_values
+          WHERE card_uuid = ${uuid}`
+
+        await SQL`
+          DELETE FROM core.date_values
+          WHERE card_uuid = ${uuid}`
+
+        await SQL`
+          DELETE FROM core.number_values
+          WHERE card_uuid = ${uuid}`
+
+        await SQL`
+          DELETE FROM core.select_values
+          WHERE card_uuid = ${uuid}`
+
+        const result = await SQL`
+        DELETE FROM core.cards
+        WHERE card_uuid = ${uuid}
+        RETURNING card_uuid as uuid`;
+
+        return result
+      })
+
+      if (result.length !== 1) {
+        return null;
+      }
+
+      pubsub.publish("card_deleted", { card_deleted: result[0].uuid });
+
+      return result[0].uuid
+    },
+
     // TODO
     async update_details(_, { uuid, name, description, story_points, assignee_uuids, deadline, tag_uuids, milestone_uuid, column_uuid }) {
       const result = await SQL`
@@ -262,6 +301,9 @@ const subscription = {
   },
   card_updated: {
     subscribe: () => pubsub.asyncIterator(['card_updated'])
+  },
+  card_deleted: {
+    subscribe: () => pubsub.asyncIterator(['card_deleted'])
   },
 }
 
