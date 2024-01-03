@@ -36,6 +36,9 @@ type Subscription {
     "Card updated"
     card_updated: Card!
 
+    "Card deleted"
+    card_deleted: UUID!
+
     "Project created"
     project_created: Project!
 
