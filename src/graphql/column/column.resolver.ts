@@ -45,13 +45,76 @@ const mutation = {
             return column;
         },
 
-        async swap(_, {uuid, other_uuid}) {
-            await SQL`
-                UPDATE core.columns
-                SET "order" = (SELECT SUM("order")
-                               FROM core.columns
-                               WHERE column_uuid IN (${uuid}, ${other_uuid})) - "order"
-                WHERE column_uuid IN (${uuid}, ${other_uuid})`;
+        async move(_, {uuid_from, uuid_to}) {
+            const orderResult = await SQL`
+                SELECT column_uuid, "order"
+                FROM core.columns
+                WHERE column_uuid IN (${uuid_from}, ${uuid_to});`;
+
+            console.log(orderResult)
+
+            const fromOrder = orderResult.find(r => r.uuid == uuid_from)
+            const toOrder = orderResult.find(r => r.uuid == uuid_to)
+
+            const moveForward = toOrder > fromOrder;
+
+            if (moveForward) {
+                await SQL`
+                    WITH temp AS (
+                        SELECT
+                            (SELECT "order" FROM core.columns WHERE column_uuid = ${uuid_from}) AS start_order,
+                            (SELECT "order" FROM core.columns WHERE column_uuid = ${uuid_to}) AS end_order
+                    )
+                    
+                    UPDATE core.columns AS c
+                    SET
+                        "order" = COALESCE(
+                            CASE
+                                WHEN c."order" BETWEEN (SELECT start_order FROM temp) AND (SELECT end_order FROM temp)
+                                THEN
+                                    CASE
+                                        WHEN c."order" = (SELECT start_order FROM temp)
+                                        THEN (SELECT end_order FROM temp)
+                                        ELSE (
+                                            SELECT COALESCE(MAX("order"), 0)
+                                            FROM core.columns
+                                            WHERE "order" < c."order"
+                                        )
+                                    END
+                                ELSE c."order"
+                            END,
+                            (SELECT COALESCE(MAX("order"), 0) FROM core.columns)
+                      )::integer;
+                `;
+            } else {
+                await SQL`
+                    WITH temp AS (
+                        SELECT
+                            (SELECT "order" FROM core.columns WHERE column_uuid = ${uuid_from}) AS start_order,
+                            (SELECT "order" FROM core.columns WHERE column_uuid = ${uuid_to}) AS end_order
+                    )
+                    
+                    UPDATE core.columns AS c
+                    SET
+                        "order" = COALESCE(
+                            CASE
+                                WHEN c."order" BETWEEN (SELECT end_order FROM temp) AND (SELECT start_order FROM temp)
+                                THEN
+                                    CASE
+                                        WHEN c."order" = (SELECT start_order FROM temp)
+                                        THEN (SELECT end_order FROM temp)
+                                        ELSE (
+                                            SELECT COALESCE(MIN("order"), 0)
+                                            FROM core.columns
+                                            WHERE "order" > c."order"
+                                        )
+                                    END
+                                ELSE c."order"
+                            END,
+                            (SELECT MIN("order") FROM core.columns)
+                        )::integer;
+                  `;
+            }
 
             // TODO What should subscription return? Array of two coulmns?
             void pubsub.publish("column_updated", {});

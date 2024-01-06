@@ -70,12 +70,12 @@ type ColumnMutation {
         uuid: UUID!
     ): UUID!
 
-    "Swap column position with another column"
-    swap(
-        "Column UUID"
-        uuid: UUID!
+    "Move column to another position and shift all columns in between"
+    move(
+        "UUID of the moved column"
+        uuid_from: UUID!
 
-        "Other column UUID"
-        other_uuid: UUID!
+        "UUID of the column at the destination"
+        uuid_to: UUID!
     ): Void
 }
