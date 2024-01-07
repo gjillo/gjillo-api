@@ -279,10 +279,9 @@ const mutation = {
                 FROM core.cards
                 WHERE card_uuid IN (${uuid_from}, ${uuid_to});`;
 
-      console.log(orderResult)
 
-      const fromOrder = orderResult.find(r => r.uuid == uuid_from)
-      const toOrder = orderResult.find(r => r.uuid == uuid_to)
+      const fromOrder = orderResult.find(r => r.card_uuid == uuid_from)?.order
+      const toOrder = orderResult.find(r => r.card_uuid == uuid_to)?.order
 
       const moveForward = toOrder > fromOrder;
 
