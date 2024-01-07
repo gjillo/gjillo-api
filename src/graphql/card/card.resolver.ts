@@ -273,19 +273,124 @@ const mutation = {
       return card
     },
 
-    async swap(_, { uuid, other_uuid }) {
-      await SQL`
-        UPDATE core.cards
-        SET "order" = (
-          SELECT SUM("order")
-          FROM core.cards
-          WHERE card_uuid IN (${uuid}, ${other_uuid})
-        ) - "order"
-        WHERE card_uuid IN (${uuid}, ${other_uuid})`;
+    async move(_, { uuid_from, uuid_to }) {
+      const orderResult = await SQL`
+                SELECT card_uuid, "order", column_uuid
+                FROM core.cards
+                WHERE card_uuid IN (${uuid_from}, ${uuid_to});`;
 
+      console.log(orderResult)
+
+      const fromOrder = orderResult.find(r => r.uuid == uuid_from)
+      const toOrder = orderResult.find(r => r.uuid == uuid_to)
+
+      const moveForward = toOrder > fromOrder;
+
+      const differentColumn = orderResult[0].column_uuid != orderResult[1].column_uuid
+
+      await SQL.begin(async SQL => {
+        if (differentColumn) {
+          // Set order to max order of target column + 1 and perform shift as usual
+          await SQL`
+            UPDATE core.cards
+            SET
+                "order" = (
+                    SELECT MAX("order") + 1
+                    FROM core.cards
+                    WHERE card_uuid = ${uuid_to}
+                ),
+                column_uuid = (
+                    SELECT column_uuid
+                    FROM core.cards
+                    WHERE card_uuid = ${uuid_to}
+                )
+            WHERE card_uuid = ${uuid_from};
+          `;
+        }
+
+        if (moveForward) {
+          await SQL`
+          WITH temp AS (
+              SELECT
+                  (SELECT "order" FROM core.cards WHERE card_uuid = ${uuid_from}) AS start_order,
+                  (SELECT "order" FROM core.cards WHERE card_uuid = ${uuid_to}) AS end_order,
+                  (SELECT "column_uuid" FROM core.cards WHERE card_uuid = ${uuid_to}) AS target_column
+          )
+          
+          UPDATE core.cards AS c
+          SET
+              "order" = COALESCE(
+                  CASE
+                      WHEN c."order" BETWEEN (SELECT start_order FROM temp) AND (SELECT end_order FROM temp)
+                      THEN
+                          CASE
+                              WHEN c."order" = (SELECT start_order FROM temp)
+                              THEN (SELECT end_order FROM temp)
+                              ELSE (
+                                  SELECT COALESCE(MAX("order"), 0)
+                                  FROM core.cards
+                                  WHERE "order" < c."order" AND "column_uuid" = (SELECT target_column FROM temp)
+                              )
+                          END
+                      ELSE c."order"
+                  END,
+                  (SELECT COALESCE(MAX("order"), 0) FROM core.cards)
+            )::integer
+          WHERE "column_uuid" = (SELECT target_column FROM temp);
+      `;
+        } else {
+          await SQL`
+          WITH temp AS (
+              SELECT
+                  (SELECT "order" FROM core.cards WHERE card_uuid = ${uuid_from}) AS start_order,
+                  (SELECT "order" FROM core.cards WHERE card_uuid = ${uuid_to}) AS end_order,
+                  (SELECT "column_uuid" FROM core.cards WHERE card_uuid = ${uuid_to}) AS target_column
+          )
+          
+          UPDATE core.cards AS c
+          SET
+              "order" = COALESCE(
+                  CASE
+                      WHEN c."order" BETWEEN (SELECT end_order FROM temp) AND (SELECT start_order FROM temp)
+                      THEN
+                          CASE
+                              WHEN c."order" = (SELECT start_order FROM temp)
+                              THEN (SELECT end_order FROM temp)
+                              ELSE (
+                                  SELECT COALESCE(MIN("order"), 0)
+                                  FROM core.cards
+                                  WHERE "order" > c."order" AND "column_uuid" = (SELECT target_column FROM temp)
+                              )
+                          END
+                      ELSE c."order"
+                  END,
+                  (SELECT MIN("order") FROM core.cards)
+              )::integer
+          WHERE "column_uuid" = (SELECT target_column FROM temp);
+        `;
+        }
+
+      })
       // TODO What should subscription return? Array of two cards?
       void pubsub.publish("card_updated", {});
     },
+
+    async move_to_column(_, { card_uuid, column_uuid }) {
+        await SQL`
+            UPDATE core.cards
+            SET 
+                column_uuid = ${column_uuid},
+                "order" = (
+                    SELECT COALESCE(MAX("order") + 1, 0)
+                    FROM core.columns
+                    WHERE columns.column_uuid = ${column_uuid}
+                )
+            WHERE card_uuid = ${card_uuid};
+        `;
+      // TODO What should subscription return? Array of two cards?
+      void pubsub.publish("card_updated", {});
+    },
+
 
     update_text_field: async (parent, input) => update_field(parent, input),
     update_number_field: async (parent, input) => update_field(parent, input),

@@ -53,17 +53,21 @@ const mutation = {
 
             console.log(orderResult)
 
-            const fromOrder = orderResult.find(r => r.uuid == uuid_from)
-            const toOrder = orderResult.find(r => r.uuid == uuid_to)
+            const fromOrder = orderResult.find(r => r.column_uuid == uuid_from).order
+            const toOrder = orderResult.find(r => r.column_uuid == uuid_to).order
 
             const moveForward = toOrder > fromOrder;
 
+            console.log(fromOrder, toOrder, moveForward)
+
             if (moveForward) {
+                console.log("aaa")
                 await SQL`
                     WITH temp AS (
                         SELECT
                             (SELECT "order" FROM core.columns WHERE column_uuid = ${uuid_from}) AS start_order,
-                            (SELECT "order" FROM core.columns WHERE column_uuid = ${uuid_to}) AS end_order
+                            (SELECT "order" FROM core.columns WHERE column_uuid = ${uuid_to}) AS end_order,
+                            (SELECT project_uuid FROM core.columns WHERE column_uuid = ${uuid_to}) AS project_uuid
                     )
                     
                     UPDATE core.columns AS c
@@ -84,14 +88,19 @@ const mutation = {
                                 ELSE c."order"
                             END,
                             (SELECT COALESCE(MAX("order"), 0) FROM core.columns)
-                      )::integer;
+                      )::integer
+                    WHERE "project_uuid" = (SELECT project_uuid FROM temp);
                 `;
             } else {
+
+                console.log("bbb")
+
                 await SQL`
                     WITH temp AS (
                         SELECT
                             (SELECT "order" FROM core.columns WHERE column_uuid = ${uuid_from}) AS start_order,
-                            (SELECT "order" FROM core.columns WHERE column_uuid = ${uuid_to}) AS end_order
+                            (SELECT "order" FROM core.columns WHERE column_uuid = ${uuid_to}) AS end_order,
+                            (SELECT project_uuid FROM core.columns WHERE column_uuid = ${uuid_to}) AS project_uuid
                     )
                     
                     UPDATE core.columns AS c
@@ -112,7 +121,8 @@ const mutation = {
                                 ELSE c."order"
                             END,
                             (SELECT MIN("order") FROM core.columns)
-                        )::integer;
+                        )::integer
+                    WHERE "project_uuid" = (SELECT project_uuid FROM temp);
                   `;
             }
 
