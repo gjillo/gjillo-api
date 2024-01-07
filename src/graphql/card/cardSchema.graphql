@@ -135,13 +135,22 @@ type CardsMutation {
         column_uuid: UUID
     ): Card!
 
-    "Swap card position with another card"
-    swap(
-        "Card UUID"
-        uuid: UUID!
+    "Move card to another position and shift all cards in between"
+    move(
+        "UUID of the moved card"
+        uuid_from: UUID!
 
-        "Other card UUID"
-        other_uuid: UUID!
+        "UUID of the card at the destination"
+        uuid_to: UUID!
+    ): Void
+
+    "Move card to empty column"
+    move_to_column(
+        "Moved card UUID"
+        card_uuid: UUID!
+
+        "Destination column UUID"
+        column_uuid: UUID!
     ): Void
 
     "Update custom text field"
