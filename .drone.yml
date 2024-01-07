@@ -1,0 +1,19 @@
+kind: pipeline
+type: docker
+name: cicd
+
+platform:
+  arch: arm64
+
+steps:
+  - name: code-analysis
+    image: spookyless/sonarqube-scanner
+    settings:
+      sonar_host:
+        from_secret: sonar_host
+      sonar_token:
+        from_secret: sonar_token
+      sonar_key:
+        from_secret: sonar_key
+      sonar_name:
+        from_secret: sonar_name
