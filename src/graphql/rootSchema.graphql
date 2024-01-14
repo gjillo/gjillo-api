@@ -10,6 +10,9 @@ type Query {
 
     "Detailed card information"
     card_details(cardUuid: UUID!): CardDetails
+
+    "Milestone information"
+    milestone(milestoneUuid: UUID!): Milestone
 }
 
 type Mutation {
@@ -53,4 +56,8 @@ type Subscription {
 
     "Column got deleted"
     column_deleted: UUID!
+
+    "Milestone updated"
+    milestone_updated: Milestone!
+
 }
