@@ -142,7 +142,7 @@ type CardsMutation {
 
         "UUID of the card at the destination"
         uuid_to: UUID!
-    ): Void
+    ): [Card!]!
 
     "Move card to empty column"
     move_to_column(
@@ -151,7 +151,7 @@ type CardsMutation {
 
         "Destination column UUID"
         column_uuid: UUID!
-    ): Void
+    ): [Card!]!
 
     "Update custom text field"
     update_text_field(
