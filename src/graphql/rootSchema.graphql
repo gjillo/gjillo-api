@@ -10,6 +10,9 @@ type Query {
 
     "Detailed card information"
     card_details(cardUuid: UUID!): CardDetails
+
+    "Milestone information"
+    milestone(milestoneUuid: UUID!): Milestone
 }
 
 type Mutation {

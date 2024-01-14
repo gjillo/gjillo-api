@@ -1,6 +1,16 @@
 import { SQL } from '../../database/Connection';
 
 const resolver = {
+    Query: {
+        async milestone(_, { milestoneUuid }) {
+            const result = await SQL`
+                SELECT milestone_uuid as uuid, name, creation_timestamp, deadline
+                FROM core.milestones
+                WHERE milestone_uuid = ${milestoneUuid}`;
+
+            return result[0];
+        },
+    },
     Milestone: {
         async cards(parent, _) {
             const result = await SQL`
