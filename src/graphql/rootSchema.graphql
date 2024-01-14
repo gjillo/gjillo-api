@@ -56,4 +56,8 @@ type Subscription {
 
     "Column got deleted"
     column_deleted: UUID!
+
+    "Milestone updated"
+    milestone_updated: Milestone!
+
 }
