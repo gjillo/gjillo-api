@@ -190,17 +190,18 @@ const mutation = {
             WHERE card_uuid = ${uuid}`
         } else {
           await SQL`
-            UPDATE core.date_values
-            SET value = ${deadline}
+            INSERT INTO core.date_values (card_uuid, field_uuid, value)
+            SELECT
+              ${card.uuid},
+              field_uuid,
+              ${deadline}
+            FROM core.fields
+              JOIN core.columns USING (project_uuid)
+              JOIN core.cards USING (column_uuid)
             WHERE card_uuid = ${card.uuid}
-              AND field_uuid IN (
-                SELECT field_uuid
-                FROM core.fields
-                  JOIN core.columns USING (project_uuid)
-                  JOIN core.cards USING (column_uuid)
-                WHERE card_uuid = ${card.uuid}
-                  AND role = 'deadline'
-              )
+              AND role = 'deadline'
+            ON CONFLICT (card_uuid, field_uuid) DO UPDATE
+            SET value = EXCLUDED.value;
              `
         }
       }
