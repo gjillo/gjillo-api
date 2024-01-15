@@ -37,7 +37,7 @@ type Subscription {
     card_created: Card!
 
     "Card updated"
-    card_updated: Card!
+    card_updated: [Card!]!
 
     "Card deleted"
     card_deleted: UUID!

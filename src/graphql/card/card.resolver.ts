@@ -279,7 +279,7 @@ const mutation = {
       card.milestone = await resolver.Card.milestone(card)
       card.column = await resolver.Card.column(card)
 
-      void pubsub.publish("card_updated", {card_updated: card});
+      void pubsub.publish("card_updated", {card_updated: [card]});
 
       return card
     },
@@ -400,6 +400,8 @@ const mutation = {
           resolver.Card.column(card)
         ]);
       }));
+
+      console.log(cards)
 
       void pubsub.publish("card_updated", { card_updated: cards});
       return cards
