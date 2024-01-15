@@ -279,7 +279,7 @@ const mutation = {
       card.milestone = await resolver.Card.milestone(card)
       card.column = await resolver.Card.column(card)
 
-      void pubsub.publish("card_updated", {card_updated: card});
+      void pubsub.publish("card_updated", {card_updated: [card]});
 
       return card
     },
@@ -291,10 +291,10 @@ const mutation = {
                 WHERE card_uuid IN (${uuid_from}, ${uuid_to});`;
 
 
-      const fromOrder = orderResult.find(r => r.card_uuid == uuid_from)?.order
+      let fromOrder = orderResult.find(r => r.card_uuid == uuid_from)?.order
       const toOrder = orderResult.find(r => r.card_uuid == uuid_to)?.order
+      const toColumnUuid = orderResult.find(r => r.card_uuid == uuid_to)?.column_uuid
 
-      const moveForward = toOrder > fromOrder;
 
       const differentColumn = orderResult[0].column_uuid != orderResult[1].column_uuid
 
@@ -303,22 +303,22 @@ const mutation = {
       await SQL.begin(async SQL => {
         if (differentColumn) {
           // Set order to max order of target column + 1 and perform shift as usual
-          await SQL`
+          const result = await SQL`
             UPDATE core.cards
             SET
                 "order" = (
                     SELECT MAX("order") + 1
                     FROM core.cards
-                    WHERE card_uuid = ${uuid_to}
+                    WHERE column_uuid = ${toColumnUuid}
                 ),
-                column_uuid = (
-                    SELECT column_uuid
-                    FROM core.cards
-                    WHERE card_uuid = ${uuid_to}
-                )
-            WHERE card_uuid = ${uuid_from};
+                column_uuid = ${toColumnUuid}
+            WHERE card_uuid = ${uuid_from}
+            RETURNING "order";
           `;
+          fromOrder = result[0].order
         }
+
+        const moveForward = toOrder > fromOrder;
 
         if (moveForward) {
           cards = await SQL`
@@ -400,6 +400,8 @@ const mutation = {
           resolver.Card.column(card)
         ]);
       }));
+
+      console.log(cards)
 
       void pubsub.publish("card_updated", { card_updated: cards});
       return cards
