@@ -77,5 +77,5 @@ type ColumnMutation {
 
         "UUID of the column at the destination"
         uuid_to: UUID!
-    ): Void
+    ): [Column!]!
 }

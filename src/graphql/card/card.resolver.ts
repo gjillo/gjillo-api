@@ -1,5 +1,6 @@
 import { SQL } from '../../database/Connection';
 import { pubsub } from "../context";
+import {Row, RowList} from "postgres";
 
 const resolver = {
   Card: {
@@ -120,11 +121,20 @@ const mutation = {
         await SQL`INSERT INTO core.select_values ${SQL(tagUUIDs)}`
       }
 
-      card.assignees = await resolver.Card.assignees(card)
-      card.deadline = await resolver.Card.deadline(card)
-      card.tags = await resolver.Card.tags(card)
-      card.milestone = await resolver.Card.milestone(card)
-      card.column = await resolver.Card.column(card)
+      [
+        card.assignees,
+        card.deadline,
+        card.tags,
+        card.milestone,
+        card.column
+      ] = await Promise.all([
+        resolver.Card.assignees(card),
+        resolver.Card.deadline(card),
+        resolver.Card.tags(card),
+        resolver.Card.milestone(card),
+        resolver.Card.column(card)
+      ]);
+
       void pubsub.publish("card_created", { card_created: card });
       return card;
     },
@@ -287,6 +297,8 @@ const mutation = {
 
       const differentColumn = orderResult[0].column_uuid != orderResult[1].column_uuid
 
+      let cards: RowList<Row[]>
+
       await SQL.begin(async SQL => {
         if (differentColumn) {
           // Set order to max order of target column + 1 and perform shift as usual
@@ -308,7 +320,7 @@ const mutation = {
         }
 
         if (moveForward) {
-          await SQL`
+          cards = await SQL`
           WITH temp AS (
               SELECT
                   (SELECT "order" FROM core.cards WHERE card_uuid = ${uuid_from}) AS start_order,
@@ -335,10 +347,11 @@ const mutation = {
                   END,
                   (SELECT COALESCE(MAX("order"), 0) FROM core.cards)
             )::integer
-          WHERE "column_uuid" = (SELECT target_column FROM temp);
+          WHERE "column_uuid" = (SELECT target_column FROM temp)
+          RETURNING card_uuid as uuid, name, description, story_points, creation_timestamp as created, "order";
       `;
         } else {
-          await SQL`
+          cards = await SQL`
           WITH temp AS (
               SELECT
                   (SELECT "order" FROM core.cards WHERE card_uuid = ${uuid_from}) AS start_order,
@@ -365,17 +378,34 @@ const mutation = {
                   END,
                   (SELECT MIN("order") FROM core.cards)
               )::integer
-          WHERE "column_uuid" = (SELECT target_column FROM temp);
+          WHERE "column_uuid" = (SELECT target_column FROM temp)
+          RETURNING card_uuid as uuid, name, description, story_points, creation_timestamp as created, "order";
         `;
         }
-
       })
-      // TODO What should subscription return? Array of two cards?
-      void pubsub.publish("card_updated", {});
+
+      await Promise.all(cards.map(async (card) => {
+        [
+          card.assignees,
+          card.deadline,
+          card.tags,
+          card.milestone,
+          card.column
+        ] = await Promise.all([
+          resolver.Card.assignees(card),
+          resolver.Card.deadline(card),
+          resolver.Card.tags(card),
+          resolver.Card.milestone(card),
+          resolver.Card.column(card)
+        ]);
+      }));
+
+      void pubsub.publish("card_updated", { card_updated: cards});
+      return cards
     },
 
     async move_to_column(_, { card_uuid, column_uuid }) {
-        await SQL`
+        const cards = await SQL`
             UPDATE core.cards
             SET 
                 column_uuid = ${column_uuid},
@@ -386,8 +416,25 @@ const mutation = {
                 )
             WHERE card_uuid = ${card_uuid};
         `;
-      // TODO What should subscription return? Array of two cards?
-      void pubsub.publish("card_updated", {});
+
+      await Promise.all(cards.map(async (card) => {
+        [
+          card.assignees,
+          card.deadline,
+          card.tags,
+          card.milestone,
+          card.column
+        ] = await Promise.all([
+          resolver.Card.assignees(card),
+          resolver.Card.deadline(card),
+          resolver.Card.tags(card),
+          resolver.Card.milestone(card),
+          resolver.Card.column(card)
+        ]);
+      }));
+
+      void pubsub.publish("card_updated", { card_updated: cards});
+      return cards
     },
 
 

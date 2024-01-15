@@ -1,5 +1,6 @@
 import {SQL} from '../../database/Connection';
 import {pubsub} from "../context";
+import {Row, RowList} from "postgres";
 
 const resolver = {
     Column: {
@@ -51,18 +52,16 @@ const mutation = {
                 FROM core.columns
                 WHERE column_uuid IN (${uuid_from}, ${uuid_to});`;
 
-            console.log(orderResult)
 
             const fromOrder = orderResult.find(r => r.column_uuid == uuid_from).order
             const toOrder = orderResult.find(r => r.column_uuid == uuid_to).order
 
             const moveForward = toOrder > fromOrder;
 
-            console.log(fromOrder, toOrder, moveForward)
+            let columns: RowList<Row[]>
 
             if (moveForward) {
-                console.log("aaa")
-                await SQL`
+                columns = await SQL`
                     WITH temp AS (
                         SELECT
                             (SELECT "order" FROM core.columns WHERE column_uuid = ${uuid_from}) AS start_order,
@@ -89,13 +88,11 @@ const mutation = {
                             END,
                             (SELECT COALESCE(MAX("order"), 0) FROM core.columns)
                       )::integer
-                    WHERE "project_uuid" = (SELECT project_uuid FROM temp);
+                    WHERE "project_uuid" = (SELECT project_uuid FROM temp)
+                    RETURNING column_uuid as uuid, name, type, description, "order";
                 `;
             } else {
-
-                console.log("bbb")
-
-                await SQL`
+                columns = await SQL`
                     WITH temp AS (
                         SELECT
                             (SELECT "order" FROM core.columns WHERE column_uuid = ${uuid_from}) AS start_order,
@@ -122,12 +119,19 @@ const mutation = {
                             END,
                             (SELECT MIN("order") FROM core.columns)
                         )::integer
-                    WHERE "project_uuid" = (SELECT project_uuid FROM temp);
+                    WHERE "project_uuid" = (SELECT project_uuid FROM temp)
+                    RETURNING column_uuid as uuid, name, type, description, "order";
                   `;
             }
 
-            // TODO What should subscription return? Array of two coulmns?
-            void pubsub.publish("column_updated", {});
+            await Promise.all(columns.map(async (column) => {
+                column.cards = await resolver.Column.cards(column)
+            }));
+
+            console.log(columns)
+
+            void pubsub.publish("column_updated", { column_updated: columns});
+            return columns
         },
 
         async delete(_, {uuid}) {
