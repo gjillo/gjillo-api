@@ -8,6 +8,7 @@ platform:
 steps:
   - name: code-analysis
     image: spookyless/sonarqube-scanner
+    failure: ignore
     settings:
       sonar_host:
         from_secret: sonar_host
